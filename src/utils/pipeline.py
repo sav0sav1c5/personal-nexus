@@ -5,7 +5,7 @@ from utils.text_splitter import split_text
 from utils.embadder import create_embeddings
 from utils.vector_store import store_vector
 
-DATA_PATH = '../data'
+DATA_PATH = 'data'
 
 def pipeline():
 
