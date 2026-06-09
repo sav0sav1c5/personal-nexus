@@ -1,5 +1,6 @@
 # Reads and loads files from data/
 
+import os
 from pathlib import Path
 from langchain_core.documents import Document 
 
@@ -13,7 +14,16 @@ def full_load(path):
         with open(file_path, 'r', encoding='utf-8') as file: 
             file_content = file.read()
         
-        doc = Document(page_content=file_content)
+        metadata = {
+            'source': file_path,
+            'name': os.path.basename(file_path),
+            'size': len(file_content)
+        }
+
+        doc = Document(
+            page_content=file_content,
+            metadata=metadata
+        )
         
         documents.append(doc)
     
@@ -23,7 +33,7 @@ def full_load(path):
 
 def load_documents(path, full=False):
 
-    print("Phase 1: Document loading starting...")
+    print("\n\nPhase 1: Document loading starting...")
     
     if full:
         return full_load(path=path)

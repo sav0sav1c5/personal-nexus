@@ -2,7 +2,7 @@
 
 def create_embeddings():
 
-    print("Phase 3: Document embadding starting...")
+    print("\n\nPhase 3: Document embadding starting...")
 
     print("Phase 3: Document embadding finished!")
 

@@ -10,10 +10,10 @@ DATA_PATH = 'data'
 def pipeline():
 
     # Phase 1 - Document loading
-    load_documents(path=DATA_PATH)
+    documents = load_documents(path=DATA_PATH, full=True)
     
     # Phase 2 - Text splitting
-    split_text()
+    split_text(documents, chunk_size=300, chunk_overlap=50)
 
     # Phase 3 - Embedding model
     create_embeddings()
