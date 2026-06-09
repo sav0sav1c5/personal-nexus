@@ -9,5 +9,14 @@ DATA_PATH = '../data'
 
 def pipeline():
 
+    # Phase 1 - Document loading
     load_documents(path=DATA_PATH)
-    pass
+    
+    # Phase 2 - Text splitting
+    split_text()
+
+    # Phase 3 - Embedding model
+    create_embeddings()
+
+    # Phase 4 - Vector store
+    store_vector()
