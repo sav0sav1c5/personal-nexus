@@ -9,6 +9,9 @@ from langchain_huggingface import HuggingFaceEmbeddings
 # Load API key from .env file
 load_dotenv()
 
+# Defining model name as constant so it's easy to change and hard to mismatch
+EMBEDDING_MODEL = 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'
+
 def create_embeddings(chunks: List[Document], verbose=False) -> List[Dict[str, Any]]:
 
     print("\n\nPhase 3: Document embadding starting...")
@@ -19,7 +22,7 @@ def create_embeddings(chunks: List[Document], verbose=False) -> List[Dict[str, A
     
     # Embedding model initialization
     embedding_model = HuggingFaceEmbeddings(
-        model_name='sentence-transformers/all-MiniLM-L6-v2',
+        model_name=EMBEDDING_MODEL,
         model_kwargs={'device': 'cpu'},
         encode_kwargs={'normalize_embeddings': True}
     )

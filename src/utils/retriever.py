@@ -3,9 +3,12 @@
 import chromadb
 from langchain_huggingface import HuggingFaceEmbeddings
 
+# Must match the model used in embadder.py exactly
+EMBEDDING_MODEL = 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'
+
 def load_embedding_model():
     model = HuggingFaceEmbeddings(
-        model_name='sentence-transformers/all-MiniLM-L6-v2',
+        model_name=EMBEDDING_MODEL,
         model_kwargs={'device': 'cpu'},
         encode_kwargs={'normalize_embeddings': True}
     )
