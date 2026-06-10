@@ -13,10 +13,10 @@ def pipeline():
     documents = load_documents(path=DATA_PATH, full=True)
     
     # Phase 2 - Text splitting
-    split_text(documents, chunk_size=300, chunk_overlap=50)
+    chunks = split_text(documents, chunk_size=300, chunk_overlap=50)
 
     # Phase 3 - Embedding model
-    create_embeddings()
+    create_embeddings(chunks, verbose=True)
 
     # Phase 4 - Vector store
     store_vector()
