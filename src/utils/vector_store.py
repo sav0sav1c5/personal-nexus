@@ -1,30 +1,46 @@
 # ChromaDB operations
 import chromadb
 from chromadb.config import Settings
+from typing import List, Dict, Any, Optional
 
-def store_vector(embedding_data=None):
+def store_vector(embedding_data: Optional[List[Dict[str, Any]]] = None, verbose: bool = False):
+    """
+    Stores vector embeddings in ChromaDB persistent database.
 
-    print("\n\nPhase 4: Vector storing starting...")
+    Args:
+        embedding_data (Optional[List[Dict[str, Any]]]): List from create_embeddings().
+            Each dict contains 'chunk', 'embedding', and 'metadata'.
+            If None, function returns early.
+        verbose (bool): If True, prints progress messages
+
+    Returns:
+        Collection: ChromaDB collection object, or None if no data provided
+    """
+
+    if verbose:
+        print("\n\nPhase 4: Vector storing starting...")
 
     if embedding_data is None:
-        print('No vectors for storing!')
+        if verbose:
+            print('No vectors for storing!')
         return None
     
     # Connecting with ChromaDB using PersistanceSclient
     # Save db on disk, not in memory (create directory /chromadb)
     db_client = chromadb.PersistentClient(path='./chromadb')
-    print('- Connection to ChromaDB successfully!')
+    if verbose:
+        print('- Connection to ChromaDB successfully!')
 
-    # Check collections that exist so there is no duplicated data
+    # Delete existing collection to avoid duplicates
     try:
-        # Collection exists - delete it
         db_client.delete_collection('nexus_docs')
-        print('- Previous docs collection deleted!')
+        if verbose:
+            print('- Previous docs collection deleted!')
     except:
         # Collection dont exist - continue
         pass
 
-    # Create collection
+    # Create new collection
     collection = db_client.create_collection(
         name='nexus_docs',
         metadata={
@@ -33,7 +49,7 @@ def store_vector(embedding_data=None):
         }
     )
 
-    # Prep data to save in db, list with units (id, embeddings, metadatas, documents)
+    # Prepare data for insertion with units (id, embeddings, metadatas, documents)
     ids = []
     embeddings = []
     metadatas = []
@@ -44,7 +60,7 @@ def store_vector(embedding_data=None):
         embedding = data['embedding']
         metadata = data['metadata']
 
-        # Create unique id for each chunk
+        # Create unique ID for each chunk
         file = metadata.get('name', 'unknown')
         chunk_id = metadata.get('chunk_id', i)
         unique_id = f'{file}_chunk_{chunk_id}'
@@ -60,7 +76,7 @@ def store_vector(embedding_data=None):
         })
         documents.append(chunk.page_content)
 
-    # Save in db
+    # Save to database
     collection.add(
         ids=ids,
         embeddings=embeddings,
@@ -68,7 +84,8 @@ def store_vector(embedding_data=None):
         documents=documents
     )
 
-    print(f'- Number of vectors saved in ChromaDB: {len(ids)}')
-    print("Phase 4: Vector storing finished!")
+    if verbose:
+        print(f'- Number of vectors saved in ChromaDB: {len(ids)}')
+        print("Phase 4: Vector storing finished!")
     
     return collection

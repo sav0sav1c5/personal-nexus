@@ -21,168 +21,114 @@ User asks: "Objasni mi funkcije u Python-u?"
         Answer: "Funkcije se definišu sa def..."
 ```
 
-##### Part 1: Document loading
+##### Console output:
 
-Output:
-```terminal
+With indexing after each query: 
+```
 (.venv) ... personal-nexus> python src/main.py
 Personal nexus running...
+Information:
+ - To exit enter X
+ - Verbose mode: type "v: " before your question (e.g., "v: What is Python?")
+ - Time measurement is always ON for queries
+
+Enter Query: Sta su funkcije u Pythonu?
+Starting pipeline at: 20:40:38
+Loading weights: 100%|██████████████████████████████████| 199/199 [00:00<00:00, 7539.35it/s]
+Loading weights: 100%|██████████████████████████████████| 199/199 [00:00<00:00, 7609.11it/s]
+Query time (retrieval + generation): 8.21 seconds
 
 
-Phase 1: Document loading starting...
-[Document(metadata={'source': WindowsPath('data/functions.txt'), 'name': 'functions.txt', 'size': 661}, page_content='Funkcija je blok koda koji se definiše jednom, a može se pozivati više puta.\n\nDefinisanje funkcije koristi ključnu reč def:\n\ndef pozdrav(ime):\n    return f"Zdravo, {ime}!"\n\nrezultat = pozdrav("Marko")\nprint(rezultat)  # Zdravo, Marko!\n\nParametri i argumenti:\n- Parametar je promenljiva u definiciji funkcije (ime)\n- Argument je vrednost koja se prosleđuje pri pozivu ("Marko")\n\nPodrazumevane vrednosti parametara:\ndef pozdrav(ime, jezik="srpski"):\n    if jezik == "srpski":\n        return f"Zdravo, {ime}!"\n    return f"Hello, {ime}!"\n\nLambda funkcije:\nLambda je anonimna funkcija koja se piše u jednoj liniji.\nkvadrat = lambda x: x ** 2\nprint(kvadrat(5))  # 25'), Document(metadata={'source': WindowsPath('data/lists_and_dicts.txt'), 'name': 'lists_and_dicts.txt', 'size': 725}, page_content='Lista je uređena kolekcija elemenata koji mogu biti različitih tipova.\n\nKreiranje i indeksiranje:\nvoce = ["jabuka", "kruška", "banana"]\nprint(voce[0])   # jabuka\nprint(voce[-1])  # banana (poslednji element)\n\nMetode liste:\nvoce.append("grožđe")    # dodaje na kraj\nvoce.insert(1, "mango")  # dodaje na poziciju\nvoce.remove("kruška")    # briše po vrednosti\nvoce.pop()               # briše i vraća poslednji\n\nRečnik (dict) čuva podatke u parovima ključ-vrednost:\nstudent = {\n    "ime": "Ana",\n    "godine": 20,\n    "prosek": 9.5\n}\n\nPristup vrednostima:\nprint(student["ime"])           # Ana\nprint(student.get("godine"))    # 20\n\nIteracija kroz rečnik:\nfor kljuc, vrednost in student.items():\n    print(f"{kljuc}: {vrednost}")'), Document(metadata={'source': WindowsPath('data/python_basics.txt'), 'name': 'python_basics.txt', 'size': 601}, page_content='Python je interpretirani programski jezik visokog nivoa, kreiran od strane Gvida van Rosuma 1991. godine.\n\nKarakteristike Python-a:\n- Čitljiva i jasna sintaksa koja podseća na pseudokod\n- Dinamično tipiziran jezik — ne mora se deklarisati tip promenljive\n- Interpretiran jezik — kod se izvršava liniju po liniju\n- Bogata standardna biblioteka poznata kao "batteries included"\n\nPromenljive u Python-u:\nPromenljiva se kreira jednostavnim dodeljivanjem vrednosti.\nime = "Ana"\ngodina = 2024\nvisina = 1.75\naktivna = True\n\nPython podržava više tipova podataka: int, float, str, bool, list, dict, tuple, set.')]
+========== ANSWER ==========
+Funkcija u Pythonu je blok koda koji se definiše jednom, a može se pozivati više puta. Definisanje funkcije koristi ključnu reč def.
+
+[Source 3: functions.txt]
+============================
+Total pipeline time: 19.89 seconds
+Enter Query: Mozes li mi reci nesto vise o Pandasu, za sta se koristi, kao i primere koricenja sa objasnjenjima?
+Starting pipeline at: 20:42:10
+Loading weights: 100%|██████████████████████████████████| 199/199 [00:00<00:00, 7581.54it/s]
+Loading weights: 100%|█████████████████████████████████| 199/199 [00:00<00:00, 24990.76it/s]
+Query time (retrieval + generation): 8.91 seconds
 
 
-Phase 2: Text splitting starting...
-Phase 2: Text splitting finished!
+========== ANSWER ==========
+Pandas je osnovna biblioteka za manipulaciju podacima u Pythonu. Ona se koristi za učitavanje, selekciju, manipulaciju i analizu podataka. 
 
+Primeri korišćenja Pandas-a uključuju učitavanje podataka iz CSV i Excel fajlova, kao i kreiranje DataFrame-a iz skraćenog oblika. Na primer, da biste učitali CSV fajl, koristite `pd.read_csv('fajl.csv')`, a za Excel fajl koristite `pd.read_excel('fajl.xlsx')`. Takođe, možete kreirati DataFrame sa `pd.DataFrame({'ime': ['Ana', 'Marko'], 'godine': [25, 30]})`.
 
-Phase 3: Document embadding starting...
-Phase 3: Document embadding finished!
+Pandas takođe podržava selekciju podataka, ali detalji o tome nisu dati u kontekstu. Međutim, u kontekstu je pomenuto da se može koristiti za promenu tipa podataka u koloni, brisanje duplikata i popunjavanje null vrednosti.
 
+Za vizuelizaciju podataka, Pandas se često koristi u kombinaciji sa drugim bibliotekama kao što su Matplotlib i Seaborn. Na primer, možete koristiti `sns.pairplot(df, hue='kategorija')`za kreiranje pairplot-a.
 
-Phase 4: Vector storing starting...
-Phase 4: Vector storing finished!
+Primer kompletnog koda koji uključuje učitavanje podataka, kreiranje figure sa 2 subplota i korишćenje Seaborn-a za vizuelizaciju podataka je dat, ali nije potpun.
+
+Izvor: [Source 1: pandas_basics.txt], [Source 2: visualization.txt], [Source 3: pandas_basics.txt]
+============================
+Total pipeline time: 17.27 seconds
+Enter Query: X 
+Goodbye!
+(.venv) ... personal-nexus>
 ```
 
-##### Part 2: Text splitting into chunks
-
-Output:
+Without indexing after each query: 
 ```terminal
 (.venv) ... personal-nexus> python src/main.py
-Personal nexus running...
+Personal nexus running...                                                              
+Information:                   
+ - To exit enter X
+ - Verbose mode: type "v: " before your question (e.g., "v: What is Python?")
+ - Time measurement is always ON for queries
+
+Enter Query: Sta su funkcije u Pythonu?
+Starting pipeline at: 22:07:39
+Loading weights: 100%|████████████████████████████| 199/199 [00:00<00:00, 7337.02it/s]
+Query time (retrieval + generation): 11.56 seconds
 
 
-Phase 1: Document loading starting...
-[Document(metadata={'source': WindowsPath('data/functions.txt'), 'name': 'functions.txt', 'size': 661}, page_content='Funkcija je blok koda koji se definiše jednom, a može se pozivati više puta.\n\nDefinisanje funkcije koristi ključnu reč def:\n\ndef pozdrav(ime):\n    return f"Zdravo, {ime}!"\n\nrezultat = pozdrav("Marko")\nprint(rezultat)  # Zdravo, Marko!\n\nParametri i argumenti:\n- Parametar je promenljiva u definiciji funkcije (ime)\n- Argument je vrednost koja se prosleđuje pri pozivu ("Marko")\n\nPodrazumevane vrednosti parametara:\ndef pozdrav(ime, jezik="srpski"):\n    if jezik == "srpski":\n        return f"Zdravo, {ime}!"\n    return f"Hello, {ime}!"\n\nLambda funkcije:\nLambda je anonimna funkcija koja se piše u jednoj liniji.\nkvadrat = lambda x: x ** 2\nprint(kvadrat(5))  # 25'), Document(metadata={'source': WindowsPath('data/lists_and_dicts.txt'), 'name': 'lists_and_dicts.txt', 'size': 725}, page_content='Lista je uređena kolekcija elemenata koji mogu biti različitih tipova.\n\nKreiranje i indeksiranje:\nvoce = ["jabuka", "kruška", "banana"]\nprint(voce[0])   # jabuka\nprint(voce[-1])  # banana (poslednji element)\n\nMetode liste:\nvoce.append("grožđe")    # dodaje na kraj\nvoce.insert(1, "mango")  # dodaje na poziciju\nvoce.remove("kruška")    # briše po vrednosti\nvoce.pop()               # briše i vraća poslednji\n\nRečnik (dict) čuva podatke u parovima ključ-vrednost:\nstudent = {\n    "ime": "Ana",\n    "godine": 20,\n    "prosek": 9.5\n}\n\nPristup vrednostima:\nprint(student["ime"])           # Ana\nprint(student.get("godine"))    # 20\n\nIteracija kroz rečnik:\nfor kljuc, vrednost in student.items():\n    print(f"{kljuc}: {vrednost}")'), Document(metadata={'source': WindowsPath('data/python_basics.txt'), 'name': 'python_basics.txt', 'size': 601}, page_content='Python je interpretirani programski jezik visokog nivoa, kreiran od strane Gvida van Rosuma 1991. godine.\n\nKarakteristike Python-a:\n- Čitljiva i jasna sintaksa koja podseća na pseudokod\n- Dinamično tipiziran jezik — ne mora se deklarisati tip promenljive\n- Interpretiran jezik — kod se izvršava liniju po liniju\n- Bogata standardna biblioteka poznata kao "batteries included"\n\nPromenljive u Python-u:\nPromenljiva se kreira jednostavnim dodeljivanjem vrednosti.\nime = "Ana"\ngodina = 2024\nvisina = 1.75\naktivna = True\n\nPython podržava više tipova podataka: int, float, str, bool, list, dict, tuple, set.')]
+========== ANSWER ==========
+Funkcije u Pythonu su blok koda koji se definiše jednom, a može se pozivati više puta. Definisanje funkcije koristi ključnu reč def.
+
+[Source 3: functions.txt]
+============================
+Total pipeline time: 11.56 seconds
+Enter Query: Mozes li mi reci nesto vise o Pandasu, za sta se koristi, kao i primere koricenja sa objasnjenjima?
+Starting pipeline at: 22:08:00
+Loading weights: 100%|████████████████████████████| 199/199 [00:00<00:00, 7441.22it/s]
+Query time (retrieval + generation): 8.90 seconds
 
 
-Phase 2: Text splitting starting...
-Number of created chunks: 9
-Phase 2: Text splitting finished!
+========== ANSWER ==========
+Pandas je osnovna biblioteka za manipulaciju podacima u Pythonu. Ona se koristi za učitavanje, selekciju, manipulaciju i analizu podataka. 
 
+Primeri korišćenja Pandas-a uključuju:
 
-Phase 3: Document embadding starting...
-Phase 3: Document embadding finished!
+- Učitavanje podataka iz različitih izvora, kao što su CSV i Excel fajlovi, koristeći funkcije `pd.read_csv()` i `pd.read_excel()`.
+- Kreiranje DataFrame-a iz skraćenog oblika, kao što je `pd.DataFrame({'ime': ['Ana', 'Marko'], 'godine': [25, 30]})`.
+- Selekcija podataka, ali detalji o tome nisu pruženi u kontekstu.
+- Manipulacija podacima, kao što je popunjavanje null vrednosti sa 0, brisanje duplikata i promena tipa kolone.
 
+Takođe, Pandas se može koristiti u kombinaciji sa drugim bibliotekama, kao što su Matplotlib i Seaborn, za vizualizaciju podataka.
 
-Phase 4: Vector storing starting...
-Phase 4: Vector storing finished!
+[Source 1: pandas_basics.txt, Source 2: visualization.txt, Source 3: pandas_basics.txt]
+============================
+Total pipeline time: 8.90 seconds
+Enter Query: X
+Goodbye!
+(.venv) ... personal-nexus>
 ```
 
+**Time for each query without indexing each time:**
+- **Query 1:** from *19.89s* to *11.56s* (**8.33s faster**)
+- **Query 2:** from *17.27s* to *8.90s* (**8.37s faster**)
 
-##### Part 3: Document embedding
-
-Output:
-```terminal
-(.venv) ... personal-nexus> python src/main.py
-Personal nexus running...
-
-
-Phase 1: Document loading starting...
-[Document(metadata={'source': WindowsPath('data/functions.txt'), 'name': 'functions.txt', 'size': 661}, page_content='Funkcija je blok koda koji se definiše jednom, a može se pozivati više puta.\n\nDefinisanje funkcije koristi ključnu reč def:\n\ndef pozdrav(ime):\n    return f"Zdravo, {ime}!"\n\nrezultat = pozdrav("Marko")\nprint(rezultat)  # Zdravo, Marko!\n\nParametri i argumenti:\n- Parametar je promenljiva u definiciji funkcije (ime)\n- Argument je vrednost koja se prosleđuje pri pozivu ("Marko")\n\nPodrazumevane vrednosti parametara:\ndef pozdrav(ime, jezik="srpski"):\n    if jezik == "srpski":\n        return f"Zdravo, {ime}!"\n    return f"Hello, {ime}!"\n\nLambda funkcije:\nLambda je anonimna funkcija koja se piše u jednoj liniji.\nkvadrat = lambda x: x ** 2\nprint(kvadrat(5))  # 25'), Document(metadata={'source': WindowsPath('data/lists_and_dicts.txt'), 'name': 'lists_and_dicts.txt', 'size': 725}, page_content='Lista je uređena kolekcija elemenata koji mogu biti različitih tipova.\n\nKreiranje i indeksiranje:\nvoce = ["jabuka", "kruška", "banana"]\nprint(voce[0])   # jabuka\nprint(voce[-1])  # banana (poslednji element)\n\nMetode liste:\nvoce.append("grožđe")    # dodaje na kraj\nvoce.insert(1, "mango")  # dodaje na poziciju\nvoce.remove("kruška")    # briše po vrednosti\nvoce.pop()               # briše i vraća poslednji\n\nRečnik (dict) čuva podatke u parovima ključ-vrednost:\nstudent = {\n    "ime": "Ana",\n    "godine": 20,\n    "prosek": 9.5\n}\n\nPristup vrednostima:\nprint(student["ime"])           # Ana\nprint(student.get("godine"))    # 20\n\nIteracija kroz rečnik:\nfor kljuc, vrednost in student.items():\n    print(f"{kljuc}: {vrednost}")'), Document(metadata={'source': WindowsPath('data/python_basics.txt'), 'name': 'python_basics.txt', 'size': 601}, page_content='Python je interpretirani programski jezik visokog nivoa, kreiran od strane Gvida van Rosuma 1991. godine.\n\nKarakteristike Python-a:\n- Čitljiva i jasna sintaksa koja podseća na pseudokod\n- Dinamično tipiziran jezik — ne mora se deklarisati tip promenljive\n- Interpretiran jezik — kod se izvršava liniju po liniju\n- Bogata standardna biblioteka poznata kao "batteries included"\n\nPromenljive u Python-u:\nPromenljiva se kreira jednostavnim dodeljivanjem vrednosti.\nime = "Ana"\ngodina = 2024\nvisina = 1.75\naktivna = True\n\nPython podržava više tipova podataka: int, float, str, bool, list, dict, tuple, set.')]
-
-
-Phase 2: Text splitting starting...
-Number of created chunks: 9
-Phase 2: Text splitting finished!
-
-
-Phase 3: Document embadding starting...
-Loading weights: 100%|████████████████████████████| 103/103 [00:00<00:00, 6781.89it/s]
-Cretaing vectors for 9 chunks...
-Vectors created! Dimension of each: 384
-Embedding preview:
-- Source unknown
-- Chunk content: Funkcija je blok koda koji se definiše jednom, a može se pozivati više puta.  Definisanje funkcije koristi ključnu reč def:  def pozdrav(ime):     ret...
-- [-0.067, 0.11, -0.055, -0.034, -0.116, -0.019, 0.136, 0.041, 0.024, -0.027]...
-Phase 3: Document embadding finished!
-
-
-Phase 4: Vector storing starting...
-Phase 4: Vector storing finished!
-```
-
-##### Part 4: Vector store
-
-Output:
-```terminal
-(.venv) ... personal-nexus> python src/main.py
-Personal nexus running...
-
-
-Phase 1: Document loading starting...
-[Document(metadata={'source': WindowsPath('data/functions.txt'), 'name': 'functions.txt', 'size': 661}, page_content='Funkcija je blok koda koji se definiše jednom, a može se pozivati više puta.\n\nDefinisanje funkcije koristi ključnu reč def:\n\ndef pozdrav(ime):\n    return f"Zdravo, {ime}!"\n\nrezultat = pozdrav("Marko")\nprint(rezultat)  # Zdravo, Marko!\n\nParametri i argumenti:\n- Parametar je promenljiva u definiciji funkcije (ime)\n- Argument je vrednost koja se prosleđuje pri pozivu ("Marko")\n\nPodrazumevane vrednosti parametara:\ndef pozdrav(ime, jezik="srpski"):\n    if jezik == "srpski":\n        return f"Zdravo, {ime}!"\n    return f"Hello, {ime}!"\n\nLambda funkcije:\nLambda je anonimna funkcija koja se piše u jednoj liniji.\nkvadrat = lambda x: x ** 2\nprint(kvadrat(5))  # 25'), Document(metadata={'source': WindowsPath('data/lists_and_dicts.txt'), 'name': 'lists_and_dicts.txt', 'size': 725}, page_content='Lista je uređena kolekcija elemenata koji mogu biti različitih tipova.\n\nKreiranje i indeksiranje:\nvoce = ["jabuka", "kruška", "banana"]\nprint(voce[0])   # jabuka\nprint(voce[-1])  # banana (poslednji element)\n\nMetode liste:\nvoce.append("grožđe")    # dodaje na kraj\nvoce.insert(1, "mango")  # dodaje na poziciju\nvoce.remove("kruška")    # briše po vrednosti\nvoce.pop()               # briše i vraća poslednji\n\nRečnik (dict) čuva podatke u parovima ključ-vrednost:\nstudent = {\n    "ime": "Ana",\n    "godine": 20,\n    "prosek": 9.5\n}\n\nPristup vrednostima:\nprint(student["ime"])           # Ana\nprint(student.get("godine"))    # 20\n\nIteracija kroz rečnik:\nfor kljuc, vrednost in student.items():\n    print(f"{kljuc}: {vrednost}")'), Document(metadata={'source': WindowsPath('data/python_basics.txt'), 'name': 'python_basics.txt', 'size': 601}, page_content='Python je interpretirani programski jezik visokog nivoa, kreiran od strane Gvida van Rosuma 1991. godine.\n\nKarakteristike Python-a:\n- Čitljiva i jasna sintaksa koja podseća na pseudokod\n- Dinamično tipiziran jezik — ne mora se deklarisati tip promenljive\n- Interpretiran jezik — kod se izvršava liniju po liniju\n- Bogata standardna biblioteka poznata kao "batteries included"\n\nPromenljive u Python-u:\nPromenljiva se kreira jednostavnim dodeljivanjem vrednosti.\nime = "Ana"\ngodina = 2024\nvisina = 1.75\naktivna = True\n\nPython podržava više tipova podataka: int, float, str, bool, list, dict, tuple, set.')]
-
-
-Phase 2: Text splitting starting...
-Number of created chunks: 9
-Phase 2: Text splitting finished!
-
-
-Phase 3: Document embadding starting...
-Loading weights: 100%|████████████████████████████| 103/103 [00:00<00:00, 6781.89it/s]
-Cretaing vectors for 9 chunks...
-Vectors created! Dimension of each: 384
-Embedding preview:
-- Source unknown
-- Chunk content: Funkcija je blok koda koji se definiše jednom, a može se pozivati više puta.  Definisanje funkcije koristi ključnu reč def:  def pozdrav(ime):     ret...
-- [-0.067, 0.11, -0.055, -0.034, -0.116, -0.019, 0.136, 0.041, 0.024, -0.027]...
-Phase 3: Document embadding finished!
-
-
-Phase 4: Vector storing starting...
-- Connection to ChromaDB successfully!
-- Previous docs collection deleted!
-- Number of vectors saved in ChromaDB: 9
-Phase 4: Vector storing finished!
-```
-
-##### Part 5: Retrieval
-
-Output:
-```terminal
-(.venv) ... personal-nexus> python src/main.py
-Personal nexus running...
-
-
-Phase 1: Document loading starting...
-[Document(metadata={'source': WindowsPath('data/functions.txt'), 'name': 'functions.txt', 'size': 661}, page_content='Funkcija je blok koda koji se definiše jednom, a može se pozivati više puta.\n\nDefinisanje funkcije koristi ključnu reč def:\n\ndef pozdrav(ime):\n    return f"Zdravo, {ime}!"\n\nrezultat = pozdrav("Marko")\nprint(rezultat)  # Zdravo, Marko!\n\nParametri i argumenti:\n- Parametar je promenljiva u definiciji funkcije (ime)\n- Argument je vrednost koja se prosleđuje pri pozivu ("Marko")\n\nPodrazumevane vrednosti parametara:\ndef pozdrav(ime, jezik="srpski"):\n    if jezik == "srpski":\n        return f"Zdravo, {ime}!"\n    return f"Hello, {ime}!"\n\nLambda funkcije:\nLambda je anonimna funkcija koja se piše u jednoj liniji.\nkvadrat = lambda x: x ** 2\nprint(kvadrat(5))  # 25'), Document(metadata={'source': WindowsPath('data/lists_and_dicts.txt'), 'name': 'lists_and_dicts.txt', 'size': 725}, page_content='Lista je uređena kolekcija elemenata koji mogu biti različitih tipova.\n\nKreiranje i indeksiranje:\nvoce = ["jabuka", "kruška", "banana"]\nprint(voce[0])   # jabuka\nprint(voce[-1])  # banana (poslednji element)\n\nMetode liste:\nvoce.append("grožđe")    # dodaje na kraj\nvoce.insert(1, "mango")  # dodaje na poziciju\nvoce.remove("kruška")    # briše po vrednosti\nvoce.pop()               # briše i vraća poslednji\n\nRečnik (dict) čuva podatke u parovima ključ-vrednost:\nstudent = {\n    "ime": "Ana",\n    "godine": 20,\n    "prosek": 9.5\n}\n\nPristup vrednostima:\nprint(student["ime"])           # Ana\nprint(student.get("godine"))    # 20\n\nIteracija kroz rečnik:\nfor kljuc, vrednost in student.items():\n    print(f"{kljuc}: {vrednost}")'), Document(metadata={'source': WindowsPath('data/python_basics.txt'), 'name': 'python_basics.txt', 'size': 601}, page_content='Python je interpretirani programski jezik visokog nivoa, kreiran od strane Gvida van Rosuma 1991. godine.\n\nKarakteristike Python-a:\n- Čitljiva i jasna sintaksa koja podseća na pseudokod\n- Dinamično tipiziran jezik — ne mora se deklarisati tip promenljive\n- Interpretiran jezik — kod se izvršava liniju po liniju\n- Bogata standardna biblioteka poznata kao "batteries included"\n\nPromenljive u Python-u:\nPromenljiva se kreira jednostavnim dodeljivanjem vrednosti.\nime = "Ana"\ngodina = 2024\nvisina = 1.75\naktivna = True\n\nPython podržava više tipova podataka: int, float, str, bool, list, dict, tuple, set.')]
-
-
-Phase 2: Text splitting starting...
-Number of created chunks: 9
-Phase 2: Text splitting finished!
-
-
-Phase 3: Document embadding starting...
-Loading weights: 100%|████████████████████████████| 103/103 [00:00<00:00, 6781.89it/s]
-Cretaing vectors for 9 chunks...
-Vectors created! Dimension of each: 384
-Embedding preview:
-- Source unknown
-- Chunk content: Funkcija je blok koda koji se definiše jednom, a može se pozivati više puta.  Definisanje funkcije koristi ključnu reč def:  def pozdrav(ime):     ret...
-- [-0.067, 0.11, -0.055, -0.034, -0.116, -0.019, 0.136, 0.041, 0.024, -0.027]...
-Phase 3: Document embadding finished!
-
-
-Phase 4: Vector storing starting...
-- Connection to ChromaDB successfully!
-- Previous docs collection deleted!
-- Number of vectors saved in ChromaDB: 9
-Phase 4: Vector storing finished!
-
-Phase 5: Retrieval starting...
-Loading weights: 100%|██████████████████████████████████| 199/199 [00:00<00:00, 5779.68it/s]
-- Query embedded into vector of dimension: 384
-- Retrieved 3 chunks:
-  [1] Source: python_basics.txt | Similarity: 0.5868 | "Python je interpretirani programski jezik visokog nivoa, kreiran od strane Gvida..."
-  [2] Source: python_basics.txt | Similarity: 0.5631 | "1.75 aktivna = True  Python podržava više tipova podataka: int, float, str, bool..."
-  [3] Source: functions.txt | Similarity: 0.5607 | "Funkcija je blok koda koji se definiše jednom, a može se pozivati više puta.  De..."
-Phase 5: Retrieval finished!
-```
-
-##### Part 6: Answer generator
+##### Console output (with phases - verbose) 
+- Document loading
+- Text splitting into chunks
+- Document embedding
+- Vector store
+- Retrieval
+- Answer generator
 
 Output:
 ```terminal
@@ -237,3 +183,4 @@ Funkcija u Python-u je blok koda koji se definiše jednom, a može se pozivati v
 
 [Source 3: functions.txt]
 ```
+

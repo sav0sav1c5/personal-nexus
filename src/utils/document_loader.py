@@ -2,9 +2,20 @@
 
 import os
 from pathlib import Path
-from langchain_core.documents import Document 
+from typing import List, Optional
+from langchain_core.documents import Document
 
-def full_load(path):
+def full_load(path: str, verbose: bool = False) -> List[Document]:
+    """
+    Loads all .txt files from a folder and returns a list of Document objects.
+
+    Args:
+        path (str): Path to the folder (e.g., "data")
+        verbose (bool): If True, prints progress messages
+    
+    Returns:
+        List[Document]: List of documents with content and metadata (source, name, size)
+    """
 
     folder_path = Path(path)
     documents = []
@@ -27,13 +38,26 @@ def full_load(path):
         
         documents.append(doc)
     
-    print(documents)
+    if verbose:
+        print(documents)
 
     return documents
 
-def load_documents(path, full=False):
+def load_documents(path: str, full: bool = False, verbose: bool = False) -> Optional[List[Document]]:
+    """
+    Main function for loading documents.
 
-    print("\n\nPhase 1: Document loading starting...")
+    Args:
+        path (str): Path to the folder
+        full (bool): True = load all files, False = test mode (prints 3 examples)
+        verbose (bool): If True, prints progress messages
+    
+    Returns:
+        Optional[List[Document]]: List of documents if full=True, otherwise None
+    """
+    
+    if verbose:
+        print("\n\nPhase 1: Document loading starting...")
     
     if full:
         return full_load(path=path)
@@ -50,4 +74,7 @@ def load_documents(path, full=False):
             content = file.read()
             print(content)
 
-    print("Phase 1: Document loading finished!")
+    if verbose:
+        print("Phase 1: Document loading finished!")
+        
+    return None

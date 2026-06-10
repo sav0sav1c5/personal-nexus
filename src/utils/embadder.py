@@ -12,32 +12,45 @@ load_dotenv()
 # Defining model name as constant so it's easy to change and hard to mismatch
 EMBEDDING_MODEL = 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'
 
-def create_embeddings(chunks: List[Document], verbose=False) -> List[Dict[str, Any]]:
+def create_embeddings(chunks: List[Document], verbose: bool = False) -> List[Dict[str, Any]]:
+    """
+    Converts a list of text chunks into vector embeddings.
 
-    print("\n\nPhase 3: Document embadding starting...")
+    Args:
+        chunks (List[Document]): List of Document objects with page_content
+        verbose (bool): If True, prints progress messages and preview
+
+    Returns:
+        List[Dict[str, Any]]: List of dicts containing 'chunk', 'embedding', and 'metadata'
+    """
+
+    if verbose:
+        print("\n\nPhase 3: Document embedding starting...")
 
     if not chunks:
-        print('No chunks for embedding!')
+        if verbose:
+            print('No chunks for embedding!')
         return []
     
-    # Embedding model initialization
+    # Initialize embedding model
     embedding_model = HuggingFaceEmbeddings(
         model_name=EMBEDDING_MODEL,
         model_kwargs={'device': 'cpu'},
         encode_kwargs={'normalize_embeddings': True}
     )
 
-    # Prep chunks text for embedding
+    # Extract text from chunks
     chunks_content = [c.page_content for c in chunks]
-    print(f'Cretaing vectors for {len(chunks_content)} chunks...')
+    if verbose:
+        print(f'Cretaing vectors for {len(chunks_content)} chunks...')
 
-    # Creating vectors chunks text
+    # Generate vectors
     vectors = embedding_model.embed_documents(chunks_content)
-    print(f'Vectors created! Dimension of each: {len(vectors[0])}')
+    if verbose:
+        print(f'Vectors created! Dimension of each: {len(vectors[0])}')
 
-    # Prep returnign data - connecting chunks with their vectors
+    # Connect chunks with their vectors
     embedding_data = []
-
     for i, (chunk, vector) in enumerate(zip(chunks, vectors)):
         embedding_data.append({
             'chunk': chunk,
@@ -45,23 +58,20 @@ def create_embeddings(chunks: List[Document], verbose=False) -> List[Dict[str, A
             'metadata': chunk.metadata.copy(),
         })
 
+    # Optional verbose output with preview
     if verbose:
         print('Embedding preview:')
         first_chunk = embedding_data[0]['chunk']
         first_vector = embedding_data[0]['embedding']
         first_metadata = embedding_data[0]['metadata']
 
-        # Show file source
         print(f'- Source {first_metadata.get('name', 'unknown')}')
         
-        # Show part of chunk
         chunk_preview = first_chunk.page_content[:150].replace('\n', ' ')
         if len(first_chunk.page_content) > 150:
             chunk_preview += "..."
         print(f'- Chunk content: {chunk_preview}')
-
         print(f'- {[round(x, 3) for x in first_vector[:10]]}...')
-
-    print("Phase 3: Document embadding finished!")
+        print("Phase 3: Document embedding finished!")
 
     return embedding_data
