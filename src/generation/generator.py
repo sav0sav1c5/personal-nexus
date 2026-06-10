@@ -1,54 +1,12 @@
 # Generates an answer using Groq LLM based on retrieved context
 
-# Suppress loading messages from sentence-transformers
 import os
-os.environ['TOKENIZERS_PARALLELISM'] = 'false'
-
-import logging
-logging.getLogger('sentence_transformers').setLevel(logging.WARNING)
-logging.getLogger('transformers').setLevel(logging.WARNING)
-logging.getLogger('huggingface_hub').setLevel(logging.WARNING)
-
 from groq import Groq
 from dotenv import load_dotenv
 from typing import List, Dict, Any, Generator
+from generation.prompt_builder import build_prompt
 
 load_dotenv()
-
-def build_prompt(query: str, retrieved_chunks: List[Dict[str, Any]]) -> str:
-    """
-    Builds a prompt for the LLM with context and question.
-
-    Args:
-        query (str): User's question
-        retrieved_chunks (List[Dict[str, Any]]): List of chunks with 'content' and 'metadata'
-
-    Returns:
-        str: Formatted prompt for the LLM
-    """
-
-    context_parts = []
-
-    for i, chunk in enumerate(retrieved_chunks):
-        source = chunk['metadata'].get('name', 'unknown')
-        content = chunk['content']
-        context_parts.append(f"[Source {i+1}: {source}]\n{content}")
-
-    context_block = "\n\n".join(context_parts)
-
-    prompt = f"""You are a helpful assistant. Answer the user's question based ONLY on the provided context.
-If the answer is not found in the context, say that you don't have enough information.
-Always cite which source(s) you used at the end of your answer.
-
-Context:
-{context_block}
-
-Question: {query}
-
-Answer:"""
-
-    return prompt
-
 
 def generate(query: str, retrieved_chunks: List[Dict[str, Any]], verbose: bool = False) -> Generator[str, None, None]:
     """

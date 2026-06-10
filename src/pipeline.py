@@ -2,12 +2,12 @@
 
 import os
 import time
-from utils.document_loader import load_documents
-from utils.text_splitter import split_text
-from utils.embadder import create_embeddings
-from utils.vector_store import store_vector
-from utils.retriever import retrieve
-from utils.generator import generate
+from ingestion.document_loader import load_documents
+from ingestion.text_splitter import split_text
+from retrieval.embedder import create_embeddings
+from retrieval.vector_store import store_vector
+from retrieval.retriever import retrieve
+from generation.generator import generate
 from typing import Optional
 
 DATA_PATH = 'data'
