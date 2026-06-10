@@ -1,6 +1,27 @@
 ### Progress of project:
 
-#### Part 1: Document loading
+#### Personal Nexus - version 1.0.0
+
+**Infrastructure:**
+```terminal
+User asks: "Objasni mi funkcije u Python-u?"
+                    ↓
+        1. Document loader (loads files)
+                    ↓
+        2. Text splitter (divides into chunks)
+                    ↓
+        3. Embedding (converting into vectors)
+                    ↓
+        4. Vector store (stores in ChromaDB)
+                    ↓
+        5. Retriever (finds the 3 most similar chunks)
+                    ↓
+        6. Generator (Groq LLM provides the answer)
+                    ↓
+        Answer: "Funkcije se definišu sa def..."
+```
+
+##### Part 1: Document loading
 
 Output:
 ```terminal
@@ -24,7 +45,7 @@ Phase 4: Vector storing starting...
 Phase 4: Vector storing finished!
 ```
 
-#### Part 2: Text splitting into chunks
+##### Part 2: Text splitting into chunks
 
 Output:
 ```terminal
@@ -50,7 +71,7 @@ Phase 4: Vector storing finished!
 ```
 
 
-#### Part 3: Document embedding
+##### Part 3: Document embedding
 
 Output:
 ```terminal
@@ -82,7 +103,7 @@ Phase 4: Vector storing starting...
 Phase 4: Vector storing finished!
 ```
 
-#### Part 4: Vector store
+##### Part 4: Vector store
 
 Output:
 ```terminal
@@ -117,7 +138,7 @@ Phase 4: Vector storing starting...
 Phase 4: Vector storing finished!
 ```
 
-#### Part 5: Retrieval
+##### Part 5: Retrieval
 
 Output:
 ```terminal
@@ -161,7 +182,7 @@ Loading weights: 100%|███████████████████�
 Phase 5: Retrieval finished!
 ```
 
-#### Part 6: Answer generator
+##### Part 6: Answer generator
 
 Output:
 ```terminal
