@@ -49,7 +49,7 @@ def create_embeddings(chunks: List[Document], verbose=False) -> List[Dict[str, A
         first_metadata = embedding_data[0]['metadata']
 
         # Show file source
-        print(f'- Source {first_metadata.get('filename', 'unknown')}')
+        print(f'- Source {first_metadata.get('name', 'unknown')}')
         
         # Show part of chunk
         chunk_preview = first_chunk.page_content[:150].replace('\n', ' ')

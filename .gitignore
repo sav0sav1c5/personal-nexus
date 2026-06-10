@@ -219,3 +219,7 @@ __marimo__/
 
 # Data
 /data
+
+# Database
+chromadb/
+chroma_db/
