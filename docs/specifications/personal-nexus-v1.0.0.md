@@ -1,4 +1,4 @@
-# Personal Nexus
+# Personal Nexus - Version 1.0.0
 A complete **Retrieval-Augmented Generation (RAG)** system built from scratch for learning purposes. The system loads your text documents, creates vector embeddings, and allows you to ask questions to your documents using a large language model.
 
 ---
