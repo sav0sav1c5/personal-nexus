@@ -27,7 +27,10 @@ def store_vector(embedding_data=None):
     # Create collection
     collection = db_client.create_collection(
         name='nexus_docs',
-        metadata={'description': 'Base project docs'}
+        metadata={
+            'description': 'Base project docs',
+            'hnsw:space': 'cosine'
+        }
     )
 
     # Prep data to save in db, list with units (id, embeddings, metadatas, documents)

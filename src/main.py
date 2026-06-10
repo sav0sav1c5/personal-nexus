@@ -5,7 +5,8 @@ from utils.pipeline import pipeline
 def main():
     print('Personal nexus running...')
 
-    pipeline()
+    query = "Objasni mi funkcije u Python-u?"
+    pipeline(query=query)
 
 if __name__ == '__main__':
 

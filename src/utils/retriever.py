@@ -14,7 +14,7 @@ def load_embedding_model():
 
 def embed_query(query, embedding_model):
 
-    return embedding_model.embed.query(query)
+    return embedding_model.embed_query(query)
 
 def retrieve(query, n_results):
 
@@ -56,6 +56,13 @@ def retrieve(query, n_results):
         })
     
     print(f'- Retrieved {len(retrieved_chunks)} chunks:')
+
+    for i, chunk in enumerate(retrieved_chunks):
+        source = chunk['metadata'].get('name', 'unknown')
+        similarity = chunk['similarity']
+        preview = chunk['content'][:80].replace('\n', ' ')
+        print(f'  [{i+1}] Source: {source} | Similarity: {similarity} | "{preview}..."')
+
     print("Phase 5: Retrieval finished!")
 
     return retrieved_chunks
