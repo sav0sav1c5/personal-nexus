@@ -69,7 +69,7 @@ personal-nexus/
 │   └── utils/
 │       ├── document_loader.py     ← Loads .txt files
 │       ├── text_splitter.py       ← Chunking with overlap
-│       ├── embadder.py            ← Vector embeddings
+│       ├── embedder.py            ← Vector embeddings
 │       ├── vector_store.py        ← ChromaDB operations
 │       ├── retriever.py           ← Semantic search
 │       ├── generator.py           ← Groq LLM integration
