@@ -4,9 +4,8 @@ import os
 from groq import Groq
 from dotenv import load_dotenv
 from typing import List, Dict, Any, Generator
-from src.generation.prompt_builder import build_prompt
-
-load_dotenv()
+from generation.prompt_builder import build_prompt
+from config import llm
 
 def generate(query: str, retrieved_chunks: List[Dict[str, Any]], verbose: bool = False) -> Generator[str, None, None]:
     """
@@ -35,14 +34,14 @@ def generate(query: str, retrieved_chunks: List[Dict[str, Any]], verbose: bool =
         print(f'- Prompt built with {len(retrieved_chunks)} context chunks')
 
     # Initialize Groq client
-    client = Groq(api_key=os.getenv('GROQ_API_KEY'))
+    client = Groq(api_key=llm.api_key)
 
     # Send request to LLM
     if verbose:
         print('- Sending request to Groq (llama-3.3-70b-versatile)...')
     
     response = client.chat.completions.create(
-        model='llama-3.3-70b-versatile',
+        model=llm.model,
         messages=[
             {
                 'role': 'user',
@@ -50,8 +49,8 @@ def generate(query: str, retrieved_chunks: List[Dict[str, Any]], verbose: bool =
             }
         ],
         # Low temperature = more focused, less creative answers
-        temperature=0.2,
-        max_tokens=512,
+        temperature=llm.temperature,
+        max_tokens=llm.max_tokens,
         stream=True
     )
 

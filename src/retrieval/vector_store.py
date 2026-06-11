@@ -2,6 +2,7 @@
 import chromadb
 from chromadb.config import Settings
 from typing import List, Dict, Any, Optional
+from config import paths
 
 def store_vector(embedding_data: Optional[List[Dict[str, Any]]] = None, verbose: bool = False):
     """
@@ -27,7 +28,7 @@ def store_vector(embedding_data: Optional[List[Dict[str, Any]]] = None, verbose:
     
     # Connecting with ChromaDB using PersistanceSclient
     # Save db on disk, not in memory (create directory /chromadb)
-    db_client = chromadb.PersistentClient(path='./chromadb')
+    db_client = chromadb.PersistentClient(path=paths.chroma_db_path)
     if verbose:
         print('- Connection to ChromaDB successfully!')
 

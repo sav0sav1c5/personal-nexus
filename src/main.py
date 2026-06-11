@@ -1,6 +1,6 @@
 # Entry point of app
 
-from src.pipeline import pipeline
+from pipeline import pipeline
 
 def main():
     print('Personal nexus running...')

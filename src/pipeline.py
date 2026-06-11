@@ -2,15 +2,14 @@
 
 import os
 import time
-from src.ingestion.document_loader import load_documents
-from src.ingestion.text_splitter import split_text
-from src.retrieval.embedder import create_embeddings
-from src.retrieval.vector_store import store_vector
-from src.retrieval.retriever import retrieve
-from src.generation.generator import generate
 from typing import Optional
-
-DATA_PATH = 'data'
+from ingestion.document_loader import load_documents
+from ingestion.text_splitter import split_text
+from retrieval.embedder import create_embeddings
+from retrieval.vector_store import store_vector
+from retrieval.retriever import retrieve
+from generation.generator import generate
+from config import paths, chunking, retrieval
 
 def pipeline(query: Optional[str] = None, verbose: bool = False, measure_time: bool = False):
     """
@@ -24,14 +23,14 @@ def pipeline(query: Optional[str] = None, verbose: bool = False, measure_time: b
         str: Answer if query provided, otherwise None
     """
 
-    db_exists = os.path.exists('./chromadb') and os.listdir('./chromadb')
+    db_exists = os.path.exists(paths.chroma_db_path) and os.listdir(paths.chroma_db_path)
     
     if not db_exists:
         # Phase 1 - Document loading
-        documents = load_documents(path=DATA_PATH, full=True, verbose=verbose)
+        documents = load_documents(path=paths.data_path, full=True, verbose=verbose)
         
         # Phase 2 - Text splitting
-        chunks = split_text(documents, chunk_size=300, chunk_overlap=50, verbose=verbose)
+        chunks = split_text(documents, chunking.chunk_size, chunking.chunk_overlap, verbose=verbose)
 
         # Phase 3 - Embedding model
         embeddings = create_embeddings(chunks, verbose=verbose)
@@ -50,7 +49,7 @@ def pipeline(query: Optional[str] = None, verbose: bool = False, measure_time: b
         # Measure retrieval + generation separately
         query_start = time.time() if measure_time else None
 
-        retrieved_chunks = retrieve(query=query, n_results=3, verbose=verbose)
+        retrieved_chunks = retrieve(query=query, n_results=retrieval.n_results, verbose=verbose)
         
         # First retrieval time (before streaming)
         if measure_time:

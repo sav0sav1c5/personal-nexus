@@ -1,16 +1,9 @@
 # Makes embeddings
 
-import os
-from dotenv import load_dotenv
 from langchain_core.documents import Document
 from typing import List, Dict, Any
 from langchain_huggingface import HuggingFaceEmbeddings
-
-# Load API key from .env file
-load_dotenv()
-
-# Defining model name as constant so it's easy to change and hard to mismatch
-EMBEDDING_MODEL = 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'
+from config import embedding
 
 def create_embeddings(chunks: List[Document], verbose: bool = False) -> List[Dict[str, Any]]:
     """
@@ -34,7 +27,7 @@ def create_embeddings(chunks: List[Document], verbose: bool = False) -> List[Dic
     
     # Initialize embedding model
     embedding_model = HuggingFaceEmbeddings(
-        model_name=EMBEDDING_MODEL,
+        model_name=embedding.model_name,
         model_kwargs={'device': 'cpu'},
         encode_kwargs={'normalize_embeddings': True}
     )

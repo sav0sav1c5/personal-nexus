@@ -1,20 +1,9 @@
 # Retrieves relevant chunks from ChromaDB based on user query
 
-# Suppress loading messages from sentence-transformers
-import os
-os.environ['TOKENIZERS_PARALLELISM'] = 'false'
-
-import logging
-logging.getLogger('sentence_transformers').setLevel(logging.WARNING)
-logging.getLogger('transformers').setLevel(logging.WARNING)
-logging.getLogger('huggingface_hub').setLevel(logging.WARNING)
-
 import chromadb
 from langchain_huggingface import HuggingFaceEmbeddings
 from typing import List, Dict, Any
-
-# Must match the model used in embadder.py exactly
-EMBEDDING_MODEL = 'sentence-transformers/paraphrase-multilingual-MiniLM-L12-v2'
+from config import paths, embedding
 
 def load_embedding_model():
     """
@@ -25,9 +14,9 @@ def load_embedding_model():
     """
 
     model = HuggingFaceEmbeddings(
-        model_name=EMBEDDING_MODEL,
-        model_kwargs={'device': 'cpu'},
-        encode_kwargs={'normalize_embeddings': True}
+        model_name=embedding.model_name,
+        model_kwargs={'device': embedding.device},
+        encode_kwargs={'normalize_embeddings': embedding.normalize_embeddings}
     )
 
     return model
@@ -71,7 +60,7 @@ def retrieve(query: str, n_results: int = 3, verbose: bool = False) -> List[Dict
         print(f'- Query embedded into vector of dimension: {len(query_vector)}')
 
     # Connect to the existing ChromaDB on disk
-    db_client = chromadb.PersistentClient(path='./chromadb')
+    db_client = chromadb.PersistentClient(path=paths.chroma_db_path)
     collection = db_client.get_collection('nexus_docs')
 
     # Search for the n most similar chunks using cosine similarity
