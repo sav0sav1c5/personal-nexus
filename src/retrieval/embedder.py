@@ -42,7 +42,7 @@ def create_embeddings(chunks: List[Document], verbose: bool = False) -> List[Dic
     # Extract text from chunks
     chunks_content = [c.page_content for c in chunks]
     if verbose:
-        print(f'Cretaing vectors for {len(chunks_content)} chunks...')
+        print(f'Creating vectors for {len(chunks_content)} chunks...')
 
     # Generate vectors
     vectors = embedding_model.embed_documents(chunks_content)

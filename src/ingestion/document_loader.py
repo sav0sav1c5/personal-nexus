@@ -22,6 +22,8 @@ def full_load(path: str, verbose: bool = False) -> List[Document]:
 
     # Using the .glob('*.txt') function which returns all objects with the given extension
     for file_path in folder_path.glob('*.txt'):
+        if verbose:
+            print(f"Loading: {file_path}")
         with open(file_path, 'r', encoding='utf-8') as file: 
             file_content = file.read()
         

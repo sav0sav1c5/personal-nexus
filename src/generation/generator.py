@@ -4,7 +4,7 @@ import os
 from groq import Groq
 from dotenv import load_dotenv
 from typing import List, Dict, Any, Generator
-from generation.prompt_builder import build_prompt
+from src.generation.prompt_builder import build_prompt
 
 load_dotenv()
 
