@@ -4,6 +4,7 @@ import chromadb
 from langchain_huggingface import HuggingFaceEmbeddings
 from typing import List, Dict, Any
 from config import paths, embedding
+from retrieval.model_cache import ModelCache
 
 def load_embedding_model():
     """
@@ -52,7 +53,7 @@ def retrieve(query: str, n_results: int = 3, verbose: bool = False) -> List[Dict
         print("\n\nPhase 5: Retrieval starting...")
 
     # Load the same embedding model used in Phase 3
-    embedding_model = load_embedding_model()
+    embedding_model = ModelCache.get_model()
 
     # Convert the query text into a vector
     query_vector = embed_query(query, embedding_model)
