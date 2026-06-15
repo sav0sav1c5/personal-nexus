@@ -7,7 +7,11 @@ from typing import List, Dict, Any, Generator
 from generation.prompt_builder import build_prompt
 from config import llm
 
-def generate(query: str, retrieved_chunks: List[Dict[str, Any]], verbose: bool = False) -> Generator[str, None, None]:
+def generate(
+        query: str,
+        retrieved_chunks: List[Dict[str, Any]],
+        verbose: bool = False
+) -> Generator[str, None, None]:
     """
     Generates an answer using Groq LLM based on retrieved context.
 

@@ -2,7 +2,7 @@
 
 import os
 import time
-from typing import Optional
+from typing import Optional, List, Dict
 from ingestion.document_loader import load_documents
 from ingestion.text_splitter import split_text
 from retrieval.embedder import create_embeddings
@@ -11,7 +11,7 @@ from retrieval.retriever import retrieve
 from generation.generator import generate
 from config import paths, chunking, retrieval
 
-def pipeline(query: Optional[str] = None, verbose: bool = False, measure_time: bool = False):
+def pipeline(query: Optional[str] = None, verbose: bool = False, measure_time: bool = False, conversation_history: Optional[List[Dict[str, str]]] = None):
     """
     Main RAG pipeline that processes documents and answers queries.
 

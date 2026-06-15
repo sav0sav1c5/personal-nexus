@@ -74,7 +74,7 @@ Goodbye!
 - Instance methods (`def method(self)`) require object creation
 - Class methods (`@classmethod`) work directly on the class, without an instance
 
-##### Phase 2: 
+##### Phase 2: Chat Memory
 
 Output:
 ```terminal
