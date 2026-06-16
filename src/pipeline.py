@@ -3,42 +3,37 @@
 import os
 import time
 from typing import Optional, List, Dict
-from ingestion.document_loader import load_documents
-from ingestion.text_splitter import split_text
-from retrieval.embedder import create_embeddings
-from retrieval.vector_store import store_vector
+
 from retrieval.retriever import retrieve
 from generation.generator import generate
-from config import paths, chunking, retrieval
+from config import retrieval
+from utils.indexing import check_indexing, build_index
 
-def pipeline(query: Optional[str] = None, verbose: bool = False, measure_time: bool = False, conversation_history: Optional[List[Dict[str, str]]] = None):
+def pipeline(query: Optional[str] = None,
+             verbose: bool = False, 
+             measure_time: bool = False, 
+             conversation_history: Optional[List[Dict[str, str]]] = None
+            ):
     """
     Main RAG pipeline that processes documents and answers queries.
 
     Args:
         query (Optional[str]): User's question. If None, only indexing is performed.
         verbose (bool): If True, prints progress messages for all phases
+        measure_time (bool): If True, measures and prints execution time
+        conversation_history (Optional[List[Dict[str, str]]]): History of conversation
 
     Returns:
         str: Answer if query provided, otherwise None
     """
 
-    db_exists = os.path.exists(paths.chroma_db_path) and os.listdir(paths.chroma_db_path)
+    if conversation_history is None:
+        conversation_history = []
     
-    if not db_exists:
-        # Phase 1 - Document loading
-        documents = load_documents(path=paths.data_path, full=True, verbose=verbose)
-        
-        # Phase 2 - Text splitting
-        chunks = split_text(documents, chunking.chunk_size, chunking.chunk_overlap, verbose=verbose)
+    # Build index if needed
+    if check_indexing():
+        build_index(verbose=verbose)
 
-        # Phase 3 - Embedding model
-        embeddings = create_embeddings(chunks, verbose=verbose)
-
-        # Phase 4 - Vector store
-        store_vector(embedding_data=embeddings, verbose=verbose)
-
-    
     start_time = time.time() if measure_time else None
     
     if measure_time:
@@ -60,15 +55,21 @@ def pipeline(query: Optional[str] = None, verbose: bool = False, measure_time: b
         print("\n\n========== ANSWER ==========")
         
         # Streaming of response
-        for chunk in generate(query=query, retrieved_chunks=retrieved_chunks, verbose=verbose):
+        full_response = ""
+        for chunk in generate(query=query, 
+                              retrieved_chunks=retrieved_chunks,
+                              conversation_history=conversation_history, 
+                              verbose=verbose
+                              ):
             print(chunk, end='', flush=True)
-        
+            full_response += chunk
+
         print("\n============================")
 
         if measure_time:
             total_elapsed = time.time() - start_time
             print(f'Total pipeline time: {total_elapsed:.2f} seconds')
 
-        return None
+        return full_response
     
     return None

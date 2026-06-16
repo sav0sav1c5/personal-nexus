@@ -1,44 +1,42 @@
 # Entry point of app
 
 from pipeline import pipeline
+from utils import parse_user_input, format_help, get_index_status
 
 def main():
-    print('Personal nexus running...')
-    print('Information:')
-    print(' - To exit enter X')
-    print(' - Verbose mode: type "v: " before your question (e.g., "v: What is Python?")')
-    print(' - Time measurement is always ON for queries')
-    print()
+    print(format_help())
+
+    # Show index status
+    index_status = get_index_status()
+
+    if index_status['needs_indexing']:
+        print('No index found. Indexes will be created on first query!')
+    else:
+        print(f'Index found at: {index_status['path']}')
 
     conversation_history = []
 
     while True:
         user_input = input('Enter Query: ').strip()
         
-        if user_input.upper() == 'X':
+        # Parse user input
+        action, verbose, query = parse_user_input(user_input)
+
+        if action == 'exit':
             print('Goodbye!')
             break
         
-        if user_input == '':
-            print('Please enter a question.\n')
-            continue
-
-        if user_input.lower() == 'reset':
+        if action == 'reset':
             conversation_history = []
             print('Conversation history cleared!')
             continue
-        
-        # Check for verbose mode (starts with "v: ")
-        if user_input.lower().startswith('v: '):
-            verbose = True
-            query = user_input[3:].strip()  # Remove "v: " prefix
-        else:
-            verbose = False
-            query = user_input
-        
-        if not query:
+
+        if action == 'empty':
             print('Please enter a question.\n')
             continue
+        
+        # If action is 'query' add new row for better reading
+        print()
         
         # Run pipeline with time measurement
         system_response = pipeline(
@@ -50,7 +48,7 @@ def main():
 
         # Save history of one iteration - query + response
         if system_response:
-            conversation_history.append({'role': 'user', 'content': 'query'})
+            conversation_history.append({'role': 'user', 'content': query})
             conversation_history.append({'role': 'assistant', 'content': system_response})
 
 if __name__ == '__main__':

@@ -79,6 +79,54 @@ Goodbye!
 Output:
 ```terminal
 (.venv) ... personal-nexus> python src/main.py
+Personal Nexus Commands:
+  - X          : Exit the application
+  - reset      : Clear conversation history
+  - v: <query> : Run in verbose mode (e.g., "v: What is Python?")
+  - <query>    : Regular query
 
+Time measurement is always ON for queries.
+
+Index found at: ./chromadb
+Enter Query: Sta je Pandas?
+
+Starting pipeline at: 14:45:02
+Loading weights: 100%|█████████████████████████████| 199/199 [00:00<00:00, 8196.50it/s]
+Embedding model loaded and cached.
+Retrieval time: 10.97 seconds
+Starting generation (streaming)...
+
+
+========== ANSWER ==========
+Pandas je najvažnija biblioteka za rad sa tabelarnim podacima u Pythonu. Ona uvodi dve ključne strukture: Series (jednodimenzionalni niz) i DataFrame (dvodimenzionalna tabela).
+
+[Source 1: pandas_basics.txt]
+============================
+Total pipeline time: 11.59 seconds
+Enter Query: Mozes li mi dati neke promere koricenja?
+
+Starting pipeline at: 14:45:25
+Embedding model loaded and cached.
+Retrieval time: 0.02 seconds
+Starting generation (streaming)...
+
+
+========== ANSWER ==========
+Da, mogu ti dati neke primere korišćenja funkcija sa parametrima i povratnom vrednošću.
+
+Na primer, funkcija `pozdrav_osobu` iz [Source 1: functions.txt] prihvata ime kao parametar i vraća pozdravnu poruku. Može se koristiti na sledeći način:
+rezultat = pozdrav_osobu("Marko")
+print(rezultat)  # "Zdravo, Marko!"
+
+Takođe, funkcija `pozdrav` iz [Source 2: functions.txt] prihvata ime i jezik kao parametre, i vraća pozdravnu poruku na odgovarajućem jeziku. Može se koristiti na sledeći način:
+print(pozdrav("Ana"))                 # "Zdravo, Ana!"
+print(pozdrav("Marko", "engleski"))   # "Hello, Marko!"
+print(pozdrav("Lena", "nemački"))     # "Hallo, Lena!"
+
+[Source 1: functions.txt], [Source 2: functions.txt]
+============================
+Total pipeline time: 1.10 seconds
+Enter Query: X
+Goodbye!
 (.venv) ... personal-nexus>
 ```
