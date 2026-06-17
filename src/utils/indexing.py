@@ -36,7 +36,7 @@ def build_index(verbose: bool = False) -> None:
     # Phase 1 - Document loading
     if verbose:
         print("\n[1/4] Loading documents...")
-    documents = load_documents(path=paths.data_path, full=True, verbose=verbose)
+    documents = load_documents(path=paths.data_path, doc_types='pdf', verbose=verbose)
     
     # Phase 2 - Text splitting
     if verbose:

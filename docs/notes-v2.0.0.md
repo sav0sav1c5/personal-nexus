@@ -130,3 +130,103 @@ Enter Query: X
 Goodbye!
 (.venv) ... personal-nexus>
 ```
+
+##### Phase 3: PDF loading
+
+Output:
+```terminal
+(.venv) ... personal-nexus> python src/main.py
+Personal Nexus Commands:
+  - X          : Exit the application
+  - reset      : Clear conversation history
+  - v: <query> : Run in verbose mode (e.g., "v: What is Python?")
+  - <query>    : Regular query
+
+Time measurement is always ON for queries.
+
+No index found. Indexes will be created on first query!
+Enter Query: Sta je RAGAS i kako se koristi za evaluaciju RAG sistema?
+
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 7224.67it/s]
+Starting pipeline at: 10:36:17
+Loading weights: 100%|██████████████████████████████████████████████████████████████████████| 199/199 [00:00<00:00, 7336.57it/s]
+Embedding model loaded and cached.
+Retrieval time: 8.01 seconds
+Starting generation (streaming)...
+
+
+========== ANSWER ==========
+Evaluacija RAG sistema procenjuje kvalitet celog pipeline-a, koji obuhvata retrieval (pretraga) i generation (generisanje odgovora). To znači da se ne testira samo model, već ceo sistem. Glavne dimenzije evaluacije su Context Relevancy, koja se odnosi na to da li su pronađeni chunkovi zaista relevantni za pitanje, i Groundness. 
+
+RAGAS se koristi u Python svetu, ali u C# ekosistemu moramo biti kreativni. 
+
+[Source 1: evaluation-rag.pdf, Source 2: evaluation-rag.pdf]
+============================
+Total pipeline time: 8.92 seconds
+Enter Query: Mozes li mi objasniti kako bi ziledala njegova implementacija u C#?
+
+Starting pipeline at: 10:37:00
+Embedding model loaded and cached.
+Retrieval time: 0.03 seconds
+Starting generation (streaming)...
+
+
+========== ANSWER ==========
+Implementacija RAGAS metrika u C# bi se odvijala kroz nekoliko koraka:
+
+1. **Definisanje metrika**: Prvo, bi trebalo definisati metrike koje će se koristiti za evaluaciju RAG sistema. Ove metrike su:
+ * Faithfulness
+ * Answer relevancy
+ * Context relevancy
+ * Context recall
+
+2. **Kreiranje prompt-a**: Za svaku metriku, bi trebalo kreirati prompt koji će se koristiti za evaluaciju. Na primer, za faithfulness metriku, prompt bi bio "Da li je odgovor koji je generisan od strane modela isti kao i odgovor koji je očekivan?"
+
+3. **Pozivanje LLM-a**: Nakon što su prompt-i kreirani, bi trebalo pozvati LLM (Large Language Model) da oceni odgovore. Ovo se može učiniti koristeći Azure OpenAI ili Semantic Kernel.
+
+4. **Parsiranje ocena**: Nakon što LLM vrati ocene, bi trebalo parsirati te ocene i agregirati rezultate.
+
+5. **Integracija sa SearchController-om**: Konačno, bi trebalo integrirati evaluator sa SearchController-om kako bi se omogućilo automatsko evaluiranje RAG sistema.
+
+Na primer, implementacija FaithfulnessMetric i Evaluator bi izgledala ovako:
+```csharp
+public class FaithfulnessMetric
+{
+    public string Prompt { get; set; }
+    public string ExpectedAnswer { get; set; }
+    public string GeneratedAnswer { get; set; }
+
+    public bool Evaluate()
+    {
+        // Pozovi LLM da oceni odgovor
+        var ocena = LLM.Evaluate(Prompt, ExpectedAnswer, GeneratedAnswer);
+
+        // Parsiraj ocenu
+        var rezultat = ParseOcena(ocena);
+
+        return rezultat;
+    }
+
+    private bool ParseOcena(string ocena)
+    {
+        // Parsiraj ocenu i vrati rezultat
+    }
+}
+
+public class Evaluator
+{
+    public List<FaithfulnessMetric> Metrike { get; set; }
+
+    public void Evaluate()
+    {
+        foreach (var metrika in Metrike)
+        {
+            var rezultat
+============================
+Total pipeline time: 2.01 seconds
+Enter Query: X
+Goodbye!
+(.venv) ... personal-nexus>
+```
+
+**Note:** Check what response size is because it returns unfinished part of code here - maybe configuration of LLM tokens and what he can return.

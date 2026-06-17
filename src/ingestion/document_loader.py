@@ -4,79 +4,146 @@ import os
 from pathlib import Path
 from typing import List, Optional
 from langchain_core.documents import Document
+from pypdf import PdfReader
 
-def full_load(path: str, verbose: bool = False) -> List[Document]:
+def load_documents(path: str, doc_types='txt', verbose: bool = False) -> Optional[List[Document]]:
     """
-    Loads all .txt files from a folder and returns a list of Document objects.
+    Main entry point for document loading.
+
+    Depending on doc_types, delegates loading to the appropriate loader
+    (TXT or PDF) and returns a list of LangChain Document objects.
 
     Args:
-        path (str): Path to the folder (e.g., "data")
-        verbose (bool): If True, prints progress messages
-    
-    Returns:
-        List[Document]: List of documents with content and metadata (source, name, size)
-    """
+        path (str): Path to folder containing documents
+        doc_types (str): Document type to load ('txt' or 'pdf')
+        verbose (bool): If True, prints progress logs
 
+    Returns:
+        List[Document]: Loaded documents with content + metadata
+    """
+    
+    # Convert string path into Path object for easier file handling
     folder_path = Path(path)
+    
     documents = []
 
+    # Route to appropriate loader based on document type
+    if doc_types == 'txt':
+        documents = load_txt(folder_path=folder_path, verbose=verbose)
+    else:
+        documents = load_pdf(folder_path=folder_path, verbose=verbose)
+
+    if verbose:
+        print(documents)
+
+    return documents
+
+def load_txt(folder_path: str, verbose: bool = False):
+    """
+    Loads all TXT files from the specified folder.
+
+    Each TXT file becomes one LangChain Document object.
+
+    Metadata includes:
+    - source path
+    - filename
+    - text length
+    - file type
+
+    Args:
+        folder_path (Path): Folder containing txt files
+        verbose (bool): If True, prints progress logs
+
+    Returns:
+        List[Document]
+    """
+
+    documents = []
+    
     # Using the .glob('*.txt') function which returns all objects with the given extension
     for file_path in folder_path.glob('*.txt'):
         if verbose:
-            print(f"Loading: {file_path}")
+            print(f'Loading: {file_path}')
+        
+        # Read entire file content into memory
         with open(file_path, 'r', encoding='utf-8') as file: 
             file_content = file.read()
         
         metadata = {
             'source': file_path,
             'name': os.path.basename(file_path),
-            'size': len(file_content)
+            'size': len(file_content),
+            'type': 'txt'
         }
 
+        # Create LangChain document
         doc = Document(
             page_content=file_content,
             metadata=metadata
         )
-        
+            
         documents.append(doc)
     
-    if verbose:
-        print(documents)
-
     return documents
 
-def load_documents(path: str, full: bool = False, verbose: bool = False) -> Optional[List[Document]]:
+def load_pdf(folder_path: str, verbose: bool = False):
     """
-    Main function for loading documents.
+    Loads all PDF files from the specified folder.
+
+    Each PDF is parsed page by page using pypdf.
+    Extracted page text is merged into a single string.
+
+    Each PDF becomes one LangChain Document object.
+
+    Metadata includes:
+    - source path
+    - filename
+    - extracted text size
+    - file type
+    - number of pages
 
     Args:
-        path (str): Path to the folder
-        full (bool): True = load all files, False = test mode (prints 3 examples)
-        verbose (bool): If True, prints progress messages
-    
+        folder_path (Path): Folder containing pdf files
+        verbose (bool): If True, prints progress logs
+
     Returns:
-        Optional[List[Document]]: List of documents if full=True, otherwise None
+        List[Document]
     """
-    
-    if verbose:
-        print("\n\nPhase 1: Document loading starting...")
-    
-    if full:
-        return full_load(path=path)
-    else:
-        with open(f'{path}/python_basics.txt', 'r', encoding='utf-8') as file:
-            content = file.read()
-            print(content)
-    
-        with open(f'{path}/functions.txt', 'r', encoding='utf-8') as file:
-            content = file.read()
-            print(content)
 
-        with open(f'{path}/lists_and_dicts.txt', 'r', encoding='utf-8') as file:
-            content = file.read()
-            print(content)
+    documents = []
 
-    if verbose:
-        print("Phase 1: Document loading finished!")
+    # Using the .glob('*.pdf') function which returns all objects with the given extension
+    for file_path in folder_path.glob('*.pdf'):
+        if verbose:
+            print(f'Loading: {file_path}')
+
+        # Create PDF reader object
+        reader = PdfReader(file_path)
+
+        # Reset text accumulator for each PDF file
+        complete_file = ""
+
+
+        for page in reader.pages:
+            page_text = page.extract_text()
+
+            if page_text:
+                complete_file += page_text + "\n"
         
-    return None
+        metadata = {
+            'source': file_path,
+            'name': os.path.basename(file_path),
+            'size': len(complete_file),
+            'type': 'pdf',
+            'pages': len(reader.pages)
+        }
+
+        # Create LangChain document
+        doc = Document(
+            page_content=complete_file,
+            metadata=metadata
+        )
+
+        documents.append(doc)
+
+    return documents
