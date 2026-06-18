@@ -2,6 +2,7 @@
 
 from pipeline import pipeline
 from utils import parse_user_input, format_help, get_index_status
+from evaluation.evaluate import run_evaluation
 
 def main():
     print(format_help())
@@ -34,6 +35,10 @@ def main():
         if action == 'empty':
             print('Please enter a question.\n')
             continue
+
+        if action == 'eval':
+            print('\nRunning RAGAS evaluation')
+            run_evaluation(verbose=True)
         
         # If action is 'query' add new row for better reading
         print()

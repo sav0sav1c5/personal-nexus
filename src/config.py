@@ -16,8 +16,8 @@ class PathsConfig:
 @dataclass
 class ChunkingConfig:
     """Text splitting parameters"""
-    chunk_size: int = 300
-    chunk_overlap: int = 50
+    chunk_size: int = 800
+    chunk_overlap: int = 150
 
 @dataclass
 class EmbeddingConfig:
@@ -29,14 +29,14 @@ class EmbeddingConfig:
 @dataclass
 class RetrievalConfig:
     """Search/retrieval parameters"""
-    n_results: int = 3
+    n_results: int = 5
 
 @dataclass
 class LLMConfig:
     """Groq LLM configuration"""
     api_key: str = os.getenv('GROQ_API_KEY', '')
-    model: str = 'llama-3.3-70b-versatile'
-    temperature: float = 0.2
+    model: str = 'llama-3.1-8b-instant'
+    temperature: float = 0.15
     max_tokens: int = 512
 
 # Singleton instances that will be used in all other files

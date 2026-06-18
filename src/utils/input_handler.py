@@ -11,7 +11,7 @@ def parse_user_input(user_input: str) -> Tuple[Optional[str], bool, Optional[str
 
     Returns: 
     Tuple[Optional[str], bool, Optional[str]]: 
-    - action: 'exit', 'reset', 'query', or 'empty' 
+    - action: 'exit', 'reset', 'eval', 'query' or 'empty' 
     - verbose: bool 
     - query: str or None 
     """
@@ -25,6 +25,14 @@ def parse_user_input(user_input: str) -> Tuple[Optional[str], bool, Optional[str
     # Check for reset
     if user_input.lower() == 'reset':
         return 'reset', False, None
+    
+    # Check for evaluation
+    if user_input.lower() == '/eval':
+        return 'eval', False, None
+
+    # Check for verbose evaluation
+    if user_input.lower() == 'v: /eval':
+        return 'eval', True, None
     
     # Check for empty import
     if not user_input:

@@ -230,3 +230,12 @@ Goodbye!
 ```
 
 **Note:** Check what response size is because it returns unfinished part of code here - maybe configuration of LLM tokens and what he can return.
+
+##### Phase 4: Evaluation using RAGAS
+
+Evaluation needs to contain next 4 steps:
+- **Dataset loading**
+- **Metric definition** - answer relevancy, faithfullness, context precision and recall
+  Metrics that exist in RAGAS (Context Precision, Context Recall, Context Entities Recall, Noise Sensitivity, Response Relevancy, Faithfulness, Multimodal Faithfulness, Multimodal Relevance)
+- **Experiment execution**
+- **Store results**

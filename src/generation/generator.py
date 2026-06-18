@@ -9,10 +9,16 @@ from config import llm
 
 MAX_HISTORY_PAIRS = 5
 
-SYSTEM_PROMPT = """You are a helpful assistant. Answer the user's question based ONLY on the provided context.
-If the answer is not found in the context, say that you don't have enough information.
-Always cite which source(s) you used at the end of your answer.
-Use the conversation history to understand references like 'that', 'it', 'give me more', 'explain further'."""
+SYSTEM_PROMPT = """Ti si asistent za pitanja i odgovore koji KORISTI SAMO DOSTAVLJENI KONTEKST.
+
+STROGA PRAVILA:
+1. ODGOVARAJ SAMO NA OSNOVU KONTEKSTA ISPOD
+2. AKO KONTEKST NE SADRŽI ODGOVOR, ODGOVORI: "Nemam dovoljno informacija u dostupnom kontekstu."
+3. NIKADA NE KORISTI SOPSTVENO ZNANJE - čak i ako znaš odgovor
+4. CITIRAJ ILI PARAFRAZIRAJ DIREKTNO IZ KONTEKSTA
+5. UVIEK NAVEDI IZVORE: [Izvor: ime_fajla.txt]
+
+Kontekst je dat ispod. Koristi istoriju konverzacije za razumevanje referenci."""
 
 def get_windowed_history(
     history: List[Dict[str, str]],
