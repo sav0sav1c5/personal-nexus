@@ -32,6 +32,15 @@ class RetrievalConfig:
     n_results: int = 5
 
 @dataclass
+class RerankingConfig:
+    """Reranking model configuration"""
+    enabled: bool = True
+    model_name: str = "BAAI/bge-reranker-v2-m3"
+    device: str = "cpu"
+    n_candidates: int = 20
+    n_final: int = 3
+
+@dataclass
 class LLMConfig:
     """Groq LLM configuration"""
     api_key: str = os.getenv('GROQ_API_KEY', '')
@@ -44,4 +53,5 @@ paths = PathsConfig()
 chunking = ChunkingConfig()
 embedding = EmbeddingConfig()
 retrieval = RetrievalConfig()
+reranking = RerankingConfig()
 llm = LLMConfig()
