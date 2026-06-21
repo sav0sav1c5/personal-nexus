@@ -3,6 +3,7 @@
 from typing import List, Dict, Any
 from sentence_transformers import CrossEncoder
 from config import reranking
+import torch
 
 class RerankerCache:
     """
@@ -60,11 +61,26 @@ def rerank(
     pairs = [[query, chunk['content']] for chunk in chunks]
 
     # predict() returns a list of relevance scores, one per pair
-    scores = model.predict(pairs)
+    # Raw logits from the model (can be negative, unlimited range)
+    raw_scores = model.predict(pairs)
 
+    # Normalize to [0, 1] via sigmoid function, so that the threshold has a stable meaning
+    normalized_scores = torch.sigmoid(torch.tensor(raw_scores)).tolist()
+    
     # Attach the score to each chunk dict so it survives downstream
-    for chunk, score in zip(chunks, scores):
+    for chunk, score in zip(chunks, normalized_scores):
         chunk['rerank_score'] = float(score)
+
+    # Filtering BEFORE cutting on top_n - this is the essence of the relevance threshold
+    filtered_chunks = [
+        chunk for chunk in chunks
+        if chunk['rerank_score'] >= reranking.min_rerank_score
+    ]
+
+    if verbose:
+        discarded = len(chunks) - len(filtered_chunks)
+        if discarded > 0:
+            print(f'- Discarded {discarded} chunks below threshold {reranking.min_rerank_score}')
 
     # Sort by rerank_score, highest first
     reranked_chunks = sorted(

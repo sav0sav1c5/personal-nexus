@@ -39,6 +39,7 @@ class RerankingConfig:
     device: str = "cpu"
     n_candidates: int = 20
     n_final: int = 3
+    min_rerank_score: float = 0.1 
 
 @dataclass
 class LLMConfig:

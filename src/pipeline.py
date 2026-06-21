@@ -5,8 +5,9 @@ import time
 from typing import Optional, List, Dict
 
 from retrieval.retriever import retrieve
+from retrieval.reranker import rerank
 from generation.generator import generate
-from config import retrieval
+from config import retrieval, reranking
 from utils.indexing import check_indexing, build_index
 
 def pipeline(query: Optional[str] = None,
@@ -44,8 +45,29 @@ def pipeline(query: Optional[str] = None,
         # Measure retrieval + generation separately
         query_start = time.time() if measure_time else None
 
-        retrieved_chunks = retrieve(query=query, n_results=retrieval.n_results, verbose=verbose)
-        
+        if reranking.enabled: 
+            # Phase 1: pull a WIDER set of candidates (eg 20) with a cheap bi-encoder search 
+            candidate_chunks = retrieve( 
+                query=query, 
+                n_results=reranking.n_candidates, 
+                verbose=verbose 
+            ) 
+
+            # Phase 2: precisely sort the candidates with the cross-encoder, keep only the best 
+            retrieved_chunks = rerank( 
+                query=query, 
+                chunks=candidate_chunks, 
+                top_n=reranking.n_final, 
+                verbose=verbose 
+            ) 
+        else: 
+                # Fallback to old behavior if reranking is turned off in config 
+                retrieved_chunks = retrieve( 
+                query=query,
+                n_results=retrieval.n_results,
+                verbose=verbose
+            )
+
         # First retrieval time (before streaming)
         if measure_time:
             retrieval_time = time.time() - query_start
