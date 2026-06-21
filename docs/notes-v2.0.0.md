@@ -239,3 +239,10 @@ Evaluation needs to contain next 4 steps:
   Metrics that exist in RAGAS (Context Precision, Context Recall, Context Entities Recall, Noise Sensitivity, Response Relevancy, Faithfulness, Multimodal Faithfulness, Multimodal Relevance)
 - **Experiment execution**
 - **Store results**
+
+`TODO`
+
+##### Phase 5: Reranker
+
+By adding the reranker I am trying to solve a problem that occurs and I have seen it: Irrelevant chenks with close vectors keep coming back from the retriever.
+
