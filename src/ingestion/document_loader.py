@@ -5,8 +5,9 @@ from pathlib import Path
 from typing import List, Optional
 from langchain_core.documents import Document
 from pypdf import PdfReader
+from config import system
 
-def load_documents(path: str, doc_types='txt', verbose: bool = False) -> Optional[List[Document]]:
+def load_documents(path: str, doc_types='txt') -> Optional[List[Document]]:
     """
     Main entry point for document loading.
 
@@ -29,16 +30,16 @@ def load_documents(path: str, doc_types='txt', verbose: bool = False) -> Optiona
 
     # Route to appropriate loader based on document type
     if doc_types == 'txt':
-        documents = load_txt(folder_path=folder_path, verbose=verbose)
+        documents = load_txt(folder_path=folder_path)
     else:
-        documents = load_pdf(folder_path=folder_path, verbose=verbose)
+        documents = load_pdf(folder_path=folder_path)
 
-    if verbose:
+    if system.verbose_loading:
         print(documents)
 
     return documents
 
-def load_txt(folder_path: str, verbose: bool = False):
+def load_txt(folder_path: str):
     """
     Loads all TXT files from the specified folder.
 
@@ -62,7 +63,7 @@ def load_txt(folder_path: str, verbose: bool = False):
     
     # Using the .glob('*.txt') function which returns all objects with the given extension
     for file_path in folder_path.glob('*.txt'):
-        if verbose:
+        if system.verbose_loading:
             print(f'Loading: {file_path}')
         
         # Read entire file content into memory
@@ -86,7 +87,7 @@ def load_txt(folder_path: str, verbose: bool = False):
     
     return documents
 
-def load_pdf(folder_path: str, verbose: bool = False):
+def load_pdf(folder_path: str):
     """
     Loads all PDF files from the specified folder.
 
@@ -114,7 +115,7 @@ def load_pdf(folder_path: str, verbose: bool = False):
 
     # Using the .glob('*.pdf') function which returns all objects with the given extension
     for file_path in folder_path.glob('*.pdf'):
-        if verbose:
+        if system.verbose_loading:
             print(f'Loading: {file_path}')
 
         # Create PDF reader object

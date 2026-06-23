@@ -49,6 +49,21 @@ class LLMConfig:
     temperature: float = 0.15
     max_tokens: int = 512
 
+@dataclass
+class SystemConfig:
+    """Global system settings that control pipeline behavior."""
+    measure_time: bool = True
+
+    # Default values ​​for verbose per stage (all off)
+    verbose_indexing: bool = False
+    verbose_loading: bool = False
+    verbose_splitting: bool = False
+    verbose_embedding: bool = False
+    verbose_storing: bool = False
+    verbose_retrieval: bool = False
+    verbose_reranking: bool = False
+    verbose_generation: bool = False
+
 # Singleton instances that will be used in all other files
 paths = PathsConfig()
 chunking = ChunkingConfig()
@@ -56,3 +71,4 @@ embedding = EmbeddingConfig()
 retrieval = RetrievalConfig()
 reranking = RerankingConfig()
 llm = LLMConfig()
+system = SystemConfig()

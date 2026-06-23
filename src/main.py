@@ -3,6 +3,7 @@
 from pipeline import pipeline
 from utils import parse_user_input, format_help, get_index_status
 from evaluation.evaluate import run_evaluation
+from config import system
 
 def main():
     print(format_help())
@@ -21,7 +22,7 @@ def main():
         user_input = input('Enter Query: ').strip()
         
         # Parse user input
-        action, verbose, query = parse_user_input(user_input)
+        action, query = parse_user_input(user_input)
 
         if action == 'exit':
             print('Goodbye!')
@@ -46,8 +47,7 @@ def main():
         # Run pipeline with time measurement
         system_response = pipeline(
             query=query, 
-            verbose=verbose, 
-            measure_time=True,
+            measure_time=system.measure_time,
             conversation_history=conversation_history
         )
 

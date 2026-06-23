@@ -5,6 +5,7 @@ from langchain_huggingface import HuggingFaceEmbeddings
 from typing import List, Dict, Any
 from config import paths, embedding
 from retrieval.model_cache import ModelCache
+from config import system
 
 def load_embedding_model():
     """
@@ -36,7 +37,7 @@ def embed_query(query: str, embedding_model) -> List[float]:
 
     return embedding_model.embed_query(query)
 
-def retrieve(query: str, n_results: int = 3, verbose: bool = False) -> List[Dict[str, Any]]:
+def retrieve(query: str, n_results: int = 3) -> List[Dict[str, Any]]:
     """
     Retrieves the most similar chunks from ChromaDB for a given query.
 
@@ -49,7 +50,7 @@ def retrieve(query: str, n_results: int = 3, verbose: bool = False) -> List[Dict
         List[Dict[str, Any]]: List of retrieved chunks with content, metadata, distance, and similarity
     """
 
-    if verbose:
+    if system.verbose_retrieval:
         print("\n\nPhase 5: Retrieval starting...")
 
     # Load the same embedding model used in Phase 3
@@ -57,7 +58,7 @@ def retrieve(query: str, n_results: int = 3, verbose: bool = False) -> List[Dict
 
     # Convert the query text into a vector
     query_vector = embed_query(query, embedding_model)
-    if verbose:
+    if system.verbose_retrieval:
         print(f'- Query embedded into vector of dimension: {len(query_vector)}')
 
     # Connect to the existing ChromaDB on disk
@@ -88,7 +89,7 @@ def retrieve(query: str, n_results: int = 3, verbose: bool = False) -> List[Dict
             'similarity': round(1 - distance, 4)
         })
     
-    if verbose:
+    if system.verbose_retrieval:
         print(f'- Retrieved {len(retrieved_chunks)} chunks:')
 
         for i, chunk in enumerate(retrieved_chunks):

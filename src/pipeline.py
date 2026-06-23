@@ -11,7 +11,6 @@ from config import retrieval, reranking
 from utils.indexing import check_indexing, build_index
 
 def pipeline(query: Optional[str] = None,
-             verbose: bool = False, 
              measure_time: bool = False, 
              conversation_history: Optional[List[Dict[str, str]]] = None
             ):
@@ -33,7 +32,7 @@ def pipeline(query: Optional[str] = None,
     
     # Build index if needed
     if check_indexing():
-        build_index(verbose=verbose)
+        build_index()
 
     start_time = time.time() if measure_time else None
     
@@ -49,23 +48,20 @@ def pipeline(query: Optional[str] = None,
             # Phase 1: pull a WIDER set of candidates (eg 20) with a cheap bi-encoder search 
             candidate_chunks = retrieve( 
                 query=query, 
-                n_results=reranking.n_candidates, 
-                verbose=verbose 
+                n_results=reranking.n_candidates
             ) 
 
             # Phase 2: precisely sort the candidates with the cross-encoder, keep only the best 
             retrieved_chunks = rerank( 
                 query=query, 
                 chunks=candidate_chunks, 
-                top_n=reranking.n_final, 
-                verbose=verbose 
+                top_n=reranking.n_final
             ) 
         else: 
                 # Fallback to old behavior if reranking is turned off in config 
                 retrieved_chunks = retrieve( 
                 query=query,
-                n_results=retrieval.n_results,
-                verbose=verbose
+                n_results=retrieval.n_results
             )
 
         # First retrieval time (before streaming)
@@ -80,8 +76,7 @@ def pipeline(query: Optional[str] = None,
         full_response = ""
         for chunk in generate(query=query, 
                               retrieved_chunks=retrieved_chunks,
-                              conversation_history=conversation_history, 
-                              verbose=verbose
+                              conversation_history=conversation_history
                               ):
             print(chunk, end='', flush=True)
             full_response += chunk

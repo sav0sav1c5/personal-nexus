@@ -2,9 +2,9 @@
 import chromadb
 from chromadb.config import Settings
 from typing import List, Dict, Any, Optional
-from config import paths
+from config import paths, system
 
-def store_vector(embedding_data: Optional[List[Dict[str, Any]]] = None, verbose: bool = False):
+def store_vector(embedding_data: Optional[List[Dict[str, Any]]] = None):
     """
     Stores vector embeddings in ChromaDB persistent database.
 
@@ -18,24 +18,24 @@ def store_vector(embedding_data: Optional[List[Dict[str, Any]]] = None, verbose:
         Collection: ChromaDB collection object, or None if no data provided
     """
 
-    if verbose:
+    if system.verbose_storing:
         print("\n\nPhase 4: Vector storing starting...")
 
     if embedding_data is None:
-        if verbose:
+        if system.verbose_storing:
             print('No vectors for storing!')
         return None
     
     # Connecting with ChromaDB using PersistanceSclient
     # Save db on disk, not in memory (create directory /chromadb)
     db_client = chromadb.PersistentClient(path=paths.chroma_db_path)
-    if verbose:
+    if system.verbose_storing:
         print('- Connection to ChromaDB successfully!')
 
     # Delete existing collection to avoid duplicates
     try:
         db_client.delete_collection('nexus_docs')
-        if verbose:
+        if system.verbose_storing:
             print('- Previous docs collection deleted!')
     except:
         # Collection dont exist - continue
@@ -85,7 +85,7 @@ def store_vector(embedding_data: Optional[List[Dict[str, Any]]] = None, verbose:
         documents=documents
     )
 
-    if verbose:
+    if system.verbose_storing:
         print(f'- Number of vectors saved in ChromaDB: {len(ids)}')
         print("Phase 4: Vector storing finished!")
     

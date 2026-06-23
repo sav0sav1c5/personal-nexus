@@ -3,9 +3,9 @@
 from langchain_core.documents import Document
 from typing import List, Dict, Any
 from langchain_huggingface import HuggingFaceEmbeddings
-from config import embedding
+from config import embedding, system
 
-def create_embeddings(chunks: List[Document], verbose: bool = False) -> List[Dict[str, Any]]:
+def create_embeddings(chunks: List[Document]) -> List[Dict[str, Any]]:
     """
     Converts a list of text chunks into vector embeddings.
 
@@ -17,11 +17,11 @@ def create_embeddings(chunks: List[Document], verbose: bool = False) -> List[Dic
         List[Dict[str, Any]]: List of dicts containing 'chunk', 'embedding', and 'metadata'
     """
 
-    if verbose:
+    if system.verbose_embedding:
         print("\n\nPhase 3: Document embedding starting...")
 
     if not chunks:
-        if verbose:
+        if system.verbose_embedding:
             print('No chunks for embedding!')
         return []
     
@@ -34,12 +34,12 @@ def create_embeddings(chunks: List[Document], verbose: bool = False) -> List[Dic
 
     # Extract text from chunks
     chunks_content = [c.page_content for c in chunks]
-    if verbose:
+    if system.verbose_embedding:
         print(f'Creating vectors for {len(chunks_content)} chunks...')
 
     # Generate vectors
     vectors = embedding_model.embed_documents(chunks_content)
-    if verbose:
+    if system.verbose_embedding:
         print(f'Vectors created! Dimension of each: {len(vectors[0])}')
 
     # Connect chunks with their vectors
@@ -52,7 +52,7 @@ def create_embeddings(chunks: List[Document], verbose: bool = False) -> List[Dic
         })
 
     # Optional verbose output with preview
-    if verbose:
+    if system.verbose_embedding:
         print('Embedding preview:')
         first_chunk = embedding_data[0]['chunk']
         first_vector = embedding_data[0]['embedding']

@@ -2,7 +2,7 @@
 
 from typing import List, Dict, Any
 from sentence_transformers import CrossEncoder
-from config import reranking
+from config import reranking, system
 import torch
 
 class RerankerCache:
@@ -29,8 +29,7 @@ class RerankerCache:
 def rerank(
         query: str,
         chunks: List[Dict[str, Any]],
-        top_n: int = 3,
-        verbose: bool = False
+        top_n: int = 3
 ) -> List[Dict[str, Any]]:
     """
     Reranks retrieved chunks using a cross-encoder for higher precision
@@ -47,11 +46,11 @@ def rerank(
                                truncated to top_n
     """
 
-    if verbose:
+    if system.verbose_reranking:
         print("\n\nPhase 5b: Reranking starting...")
 
     if not chunks:
-        if verbose:
+        if system.verbose_reranking:
             print('- No chunks to rerank!')
         return []
 
@@ -77,21 +76,21 @@ def rerank(
         if chunk['rerank_score'] >= reranking.min_rerank_score
     ]
 
-    if verbose:
+    if system.verbose_reranking:
         discarded = len(chunks) - len(filtered_chunks)
         if discarded > 0:
             print(f'- Discarded {discarded} chunks below threshold {reranking.min_rerank_score}')
 
     # Sort by rerank_score, highest first
     reranked_chunks = sorted(
-        chunks,
+        filtered_chunks,
         key=lambda c: c['rerank_score'],
         reverse=True
     )
 
     result = reranked_chunks[:top_n]
 
-    if verbose:
+    if system.verbose_reranking:
         print(f'- Reranked {len(chunks)} chunks down to top {len(result)}:')
         for i, chunk in enumerate(result):
             source = chunk['metadata'].get('name', 'unknown')

@@ -5,7 +5,7 @@ from groq import Groq
 from dotenv import load_dotenv
 from typing import List, Dict, Any, Generator
 from generation.context_builder import build_context_block
-from config import llm
+from config import llm, system
 
 MAX_HISTORY_PAIRS = 5
 
@@ -46,8 +46,7 @@ def get_windowed_history(
 def generate(
         query: str,
         retrieved_chunks: List[Dict[str, Any]],
-        conversation_history: List[Dict[str, str]],
-        verbose: bool = False
+        conversation_history: List[Dict[str, str]]
 ) -> Generator[str, None, None]:
     """
     Generates a streaming answer using Groq LLM.
@@ -63,23 +62,23 @@ def generate(
         str: Text chunks as they stream from the API
     """
 
-    if verbose:
+    if system.verbose_generation:
         print("\n\nPhase 6: Answer generation starting...")
 
     if not retrieved_chunks:
-            if verbose:
+            if system.verbose_generation:
                 print('- No chunks provided, cannot generate answer!')
             yield "No relevant information found."
             return
     
     # Build context block from retrieved chunks
     context_block = build_context_block(retrieved_chunks)
-    if verbose:
+    if system.verbose_generation:
         print(f'- Context built from {len(retrieved_chunks)} chunks')
 
     # Get windowd history
     windowed_history = get_windowed_history(conversation_history)
-    if verbose:
+    if system.verbose_generation:
         print(f'- History window: {len(windowed_history) // 2} exchanges')
 
     # We are building a message list: 
@@ -99,14 +98,14 @@ def generate(
 
     messages.append({"role": "user", "content": current_message}) 
 
-    if verbose:
+    if system.verbose_generation:
         print(f'- Total messages sent to LLM: {len(messages)}')
 
     # Initialize Groq client
     client = Groq(api_key=llm.api_key)
 
     # Send request to LLM
-    if verbose:
+    if system.verbose_generation:
         print('- Sending request to Groq (llama-3.3-70b-versatile)...')
     
     response = client.chat.completions.create(
@@ -125,5 +124,5 @@ def generate(
         if chunk.choices[0].delta.content:
             yield chunk.choices[0].delta.content
 
-    if verbose:
+    if system.verbose_generation:
         print("Phase 6: Answer generation finished!")

@@ -2,6 +2,7 @@
 
 from langchain_core.documents import Document
 from typing import List
+from config import system
 
 def split_documents(documents: List[Document], chunk_size: int, chunk_overlap: int, verbose: bool = False) -> None:
     """
@@ -15,7 +16,7 @@ def split_documents(documents: List[Document], chunk_size: int, chunk_overlap: i
     """
     pass
 
-def split_text(documents: List[Document], chunk_size: int, chunk_overlap: int, verbose: bool = False) -> List[Document]:
+def split_text(documents: List[Document], chunk_size: int, chunk_overlap: int) -> List[Document]:
     """
     Splits documents into smaller chunks with natural boundaries and overlap.
 
@@ -29,7 +30,7 @@ def split_text(documents: List[Document], chunk_size: int, chunk_overlap: int, v
         List[Document]: List of chunk Documents with metadata (chunk_id, start, end, etc.)
     """
 
-    if verbose:
+    if system.verbose_splitting:
         print("\n\nPhase 2: Text splitting starting...")
 
     chunks = []
@@ -97,7 +98,7 @@ def split_text(documents: List[Document], chunk_size: int, chunk_overlap: int, v
             # If not next chunk starts with overlap
             start = end - chunk_overlap
 
-    if verbose:
+    if system.verbose_splitting:
         print(f'Number of created chunks: {len(chunks)}')
         print("Phase 2: Text splitting finished!")
 
