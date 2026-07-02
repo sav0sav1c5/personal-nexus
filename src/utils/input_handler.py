@@ -44,6 +44,7 @@ def format_help() -> str:
 Personal Nexus Commands:
   - X          : Exit the application
   - reset      : Clear conversation history
+  - /eval      : Run RAGAS evaluation on the test dataset
   - <query>    : Regular query
 
 Time measurement is always ON for queries.

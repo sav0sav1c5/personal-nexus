@@ -106,7 +106,7 @@ def generate(
 
     # Send request to LLM
     if system.verbose_generation:
-        print('- Sending request to Groq (llama-3.3-70b-versatile)...')
+        print(f'- Sending request to Groq ({llm.model})...')
     
     response = client.chat.completions.create(
         model=llm.model,

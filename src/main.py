@@ -40,7 +40,8 @@ def main():
         if action == 'eval':
             print('\nRunning RAGAS evaluation')
             run_evaluation(verbose=True)
-        
+            continue
+
         # If action is 'query' add new row for better reading
         print()
         

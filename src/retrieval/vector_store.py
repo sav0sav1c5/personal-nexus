@@ -1,6 +1,5 @@
 # ChromaDB operations
 import chromadb
-from chromadb.config import Settings
 from typing import List, Dict, Any, Optional
 from config import paths, system
 
@@ -37,8 +36,8 @@ def store_vector(embedding_data: Optional[List[Dict[str, Any]]] = None):
         db_client.delete_collection('nexus_docs')
         if system.verbose_storing:
             print('- Previous docs collection deleted!')
-    except:
-        # Collection dont exist - continue
+    except Exception:
+        # Collection doesn't exist yet - nothing to delete, continue
         pass
 
     # Create new collection

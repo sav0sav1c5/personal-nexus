@@ -4,18 +4,6 @@ from langchain_core.documents import Document
 from typing import List
 from config import system
 
-def split_documents(documents: List[Document], chunk_size: int, chunk_overlap: int, verbose: bool = False) -> None:
-    """
-    Placeholder function (not implemented).
-
-    Args:
-        documents (List[Document]): List of documents to split
-        chunk_size (int): Maximum size of each chunk
-        chunk_overlap (int): Overlap between chunks
-        verbose (bool): If True, prints progress messages
-    """
-    pass
-
 def split_text(documents: List[Document], chunk_size: int, chunk_overlap: int) -> List[Document]:
     """
     Splits documents into smaller chunks with natural boundaries and overlap.

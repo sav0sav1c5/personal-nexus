@@ -1,13 +1,10 @@
 # Merges everything together into one RAG flow
 
-import os
 import time
 from typing import Optional, List, Dict
 
-from retrieval.retriever import retrieve
-from retrieval.reranker import rerank
+from retrieval.search import get_relevant_chunks
 from generation.generator import generate
-from config import retrieval, reranking
 from utils.indexing import check_indexing, build_index
 
 def pipeline(query: Optional[str] = None,
@@ -19,7 +16,6 @@ def pipeline(query: Optional[str] = None,
 
     Args:
         query (Optional[str]): User's question. If None, only indexing is performed.
-        verbose (bool): If True, prints progress messages for all phases
         measure_time (bool): If True, measures and prints execution time
         conversation_history (Optional[List[Dict[str, str]]]): History of conversation
 
@@ -44,25 +40,8 @@ def pipeline(query: Optional[str] = None,
         # Measure retrieval + generation separately
         query_start = time.time() if measure_time else None
 
-        if reranking.enabled: 
-            # Phase 1: pull a WIDER set of candidates (eg 20) with a cheap bi-encoder search 
-            candidate_chunks = retrieve( 
-                query=query, 
-                n_results=reranking.n_candidates
-            ) 
-
-            # Phase 2: precisely sort the candidates with the cross-encoder, keep only the best 
-            retrieved_chunks = rerank( 
-                query=query, 
-                chunks=candidate_chunks, 
-                top_n=reranking.n_final
-            ) 
-        else: 
-                # Fallback to old behavior if reranking is turned off in config 
-                retrieved_chunks = retrieve( 
-                query=query,
-                n_results=retrieval.n_results
-            )
+        # Two-stage retrieve + rerank (or plain retrieval), shared with evaluation
+        retrieved_chunks = get_relevant_chunks(query)
 
         # First retrieval time (before streaming)
         if measure_time:

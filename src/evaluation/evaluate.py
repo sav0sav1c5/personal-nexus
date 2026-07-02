@@ -1,27 +1,30 @@
-# RAGAS evaluation of PAG system
+# RAGAS evaluation of RAG system
 
 from ragas import evaluate, EvaluationDataset
 from ragas.dataset_schema import SingleTurnSample
-from retrieval.retriever import retrieve
+from retrieval.search import get_relevant_chunks
 from generation.generator import generate
 from evaluation.eval_config import METRICS, TEST_QUESTIONS, TEST_QUESTIONS_SUBSET, run_config
 
-def collect_data(test_questions: list, verbose: bool = False) -> tuple:
-    """ 
-    It goes through each question, runs the RAG pipeline and collects 
-    all necessary data for RAGAS evaluation. 
-
-    Returns: 
-    tuple: (questions, answers, contexts, ground_truths) 
+def collect_data(test_questions: list) -> list:
     """
-        
+    It goes through each question, runs the RAG pipeline and collects
+    all necessary data for RAGAS evaluation.
+
+    Uses the SAME retrieval path (retrieve + rerank) as the live app,
+    so the evaluation reflects what users actually get.
+
+    Returns:
+    list: List of SingleTurnSample objects
+    """
+
     samples = []
 
     for item in test_questions:
         question = item['question']
         ground_truth = item['ground_truth']
 
-        retrieved_chunks = retrieve(query=question, n_results=3)
+        retrieved_chunks = get_relevant_chunks(question)
 
         context_texts = [chunk['content'] for chunk in retrieved_chunks]
 
@@ -73,7 +76,7 @@ def run_evaluation(verbose: bool = False) -> None:
     if verbose: 
         print("Collecting data from RAG pipeline...") 
 
-    samples = collect_data(test_questions=TEST_QUESTIONS_SUBSET, verbose=verbose) 
+    samples = collect_data(test_questions=TEST_QUESTIONS_SUBSET)
     dataset = format_data(samples) 
 
     if verbose: 

@@ -25,11 +25,11 @@ def create_embeddings(chunks: List[Document]) -> List[Dict[str, Any]]:
             print('No chunks for embedding!')
         return []
     
-    # Initialize embedding model
+    # Initialize embedding model (all values come from EmbeddingConfig)
     embedding_model = HuggingFaceEmbeddings(
         model_name=embedding.model_name,
-        model_kwargs={'device': 'cpu'},
-        encode_kwargs={'normalize_embeddings': True}
+        model_kwargs={'device': embedding.device},
+        encode_kwargs={'normalize_embeddings': embedding.normalize_embeddings}
     )
 
     # Extract text from chunks
@@ -44,7 +44,7 @@ def create_embeddings(chunks: List[Document]) -> List[Dict[str, Any]]:
 
     # Connect chunks with their vectors
     embedding_data = []
-    for i, (chunk, vector) in enumerate(zip(chunks, vectors)):
+    for chunk, vector in zip(chunks, vectors):
         embedding_data.append({
             'chunk': chunk,
             'embedding': vector,
