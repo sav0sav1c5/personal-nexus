@@ -189,7 +189,7 @@ Implementacija RAGAS metrika u C# bi se odvijala kroz nekoliko koraka:
 5. **Integracija sa SearchController-om**: Konačno, bi trebalo integrirati evaluator sa SearchController-om kako bi se omogućilo automatsko evaluiranje RAG sistema.
 
 Na primer, implementacija FaithfulnessMetric i Evaluator bi izgledala ovako:
-```csharp
+
 public class FaithfulnessMetric
 {
     public string Prompt { get; set; }
@@ -288,7 +288,7 @@ Expected output shape (scores are illustrative):
 1. **Golden dataset is the hard part:** the code is small; writing accurate `ground_truth` answers for every document is what actually determines whether the scores mean anything.
 2. **LLM-as-a-judge:** RAGAS uses an LLM to grade an LLM. Temperature 0 on the judge makes scores reproducible.
 3. **`SingleTurnSample` / `EvaluationDataset`** replaced the old HuggingFace `Dataset` format in RAGAS 0.4.x.
-4. **Retrieval vs. full pipeline mismatch (known caveat):** `collect_data()` currently calls `retrieve(n_results=3)` directly and does **not** run the reranker (Phase 5). So the evaluation measures the *bi-encoder-only* pipeline, not the reranked one that the app actually serves. `TODO`: route eval through the same `pipeline()` path (or share a common retrieval function) so eval and production match.
+4. **Retrieval vs. full pipeline mismatch (RESOLVED in v2.0.0 cleanup):** originally `collect_data()` called `retrieve(n_results=3)` directly and skipped the reranker, so eval measured a different pipeline than the app served. Fixed by extracting a shared `get_relevant_chunks(query)` in `src/retrieval/search.py` that both `pipeline.py` and `evaluate.py` call. Now evaluation and production use the identical retrieve + rerank path (DRY / single source of truth).
 
 ##### Phase 5: Reranker
 
@@ -355,14 +355,24 @@ Motivation: in v1.0.0 a `verbose` (and later `measure_time`) flag was threaded t
 
 ---
 
-### Suggestions / next steps (for the CV project)
+### Done in the v2.0.0 cleanup
+
+These started life as "next steps" and are now implemented:
+
+- **README updated for v2.0.0** - modular structure, `llama-3.1-8b-instant`, chunk 800/150, reranker, eval, central config, correct commands.
+- **`/eval` control flow fixed** - added `continue` after `run_evaluation()` in `main.py`; `/eval` now listed in `format_help()`.
+- **Eval measures the real pipeline** - `collect_data()` now goes through the shared `get_relevant_chunks()` (retrieve + rerank), same path the app serves.
+- **Shared retrieval entry point (DRY)** - extracted `src/retrieval/search.py` (`get_relevant_chunks`), used by both `pipeline.py` and `evaluate.py`.
+- **Config as single source of truth** - `generator.py` prints the real model from `llm.model` (was hardcoded `llama-3.3-70b`); `embedder.py` reads `device`/`normalize_embeddings` from `EmbeddingConfig`.
+- **Code hygiene** - removed dead code (empty `split_documents()` placeholder), unused imports (`os`, `Settings`), unused loop index in `embedder.py`, stale `verbose` docstrings; replaced bare `except:` in `vector_store.py` with `except Exception`.
+
+---
+
+### Next steps / possible improvements
 
 Ideas ranked roughly by learning-value-per-effort. These are things that are *not yet done* and would each make a strong bullet point / demo.
 
 **High value, small effort**
-- **README is out of date** - it still documents `src/utils/pipeline.py`, `llama-3.3-70b-versatile`, chunk size 300, and the `v:` verbose mode. None of these match the current code (modular `ingestion/retrieval/generation`, `llama-3.1-8b-instant`, chunk 800/overlap 150, central config). Update it - recruiters read the README first.
-- **Fix the `/eval` control flow** - in `main.py`, after `run_evaluation()` the code falls through into `pipeline(query=None, ...)` instead of `continue`-ing back to the prompt. Also `format_help()` never mentions the `/eval` command.
-- **Make eval measure the real pipeline** - route `collect_data()` through the reranked retrieval path (see Phase 4 caveat) so the RAGAS scores reflect what users actually get.
 - **Add unit tests (pytest)** - even a handful (text splitter boundaries, `parse_user_input`, context builder formatting, reranker threshold logic). "Has tests" is a big signal on a CV.
 - **`.env.example` + config via env vars** - lets anyone clone and run; shows you think about onboarding.
 
